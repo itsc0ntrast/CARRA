@@ -1,0 +1,6 @@
+{
+  "name": "C.A.R.R.A - Career Artificial Recommendation and Research Assistant",
+  "description": "Zambia's premier career guidance and pathway discovery platform connecting secondary school students, counselors, institutions, and employers from ECZ to employment.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
