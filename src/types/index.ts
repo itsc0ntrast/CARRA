@@ -1,4 +1,14 @@
-export type GradeLevel = 'Grade 9' | 'Grade 10' | 'Grade 11' | 'Grade 12' | 'School Leaver' | 'TEVETA Student' | 'University Fresher';
+export type CBCGradeLevel = 
+  | 'Form 1 (Junior Secondary - CBC)'
+  | 'Form 2 (Junior Secondary - CBC)'
+  | 'Form 3 (Senior O-Level - CBC)'
+  | 'Form 4 (Senior O-Level Completion - CBC)'
+  | 'Form 5 (Advanced A-Level - CBC)'
+  | 'Form 6 (Advanced A-Level Graduation - CBC)'
+  | 'Grade 10-12 (Traditional ECZ Transition)'
+  | 'School Leaver / Pre-University'
+  | 'TEVETA College Trainee'
+  | 'University Undergraduate';
 
 export type ZambianProvince =
   | 'Lusaka'
@@ -12,25 +22,33 @@ export type ZambianProvince =
   | 'Muchinga'
   | 'Luapula';
 
-export type SecondaryStream =
-  | 'Pure Sciences (STEM)'
-  | 'Commercials & Business Studies'
-  | 'Technicals & Vocational (TVET)'
-  | 'Humanities, Social Sciences & Arts'
-  | 'Agricultural Sciences';
+export type CBCPathway =
+  | 'Natural Sciences (NS)'
+  | 'Technology & Computer Science (TECH)'
+  | 'Agricultural Sciences (AS)'
+  | 'Business, Commerce & Finance (BCF)'
+  | 'Social Sciences & Humanities (SS)'
+  | 'Home Economics, Hospitality & Tourism (HEH)'
+  | 'Performing & Creative Arts (PCA)'
+  | 'Physical Education & Sports Science (PES)';
+
+export type CBCPathwayType = 'Academic Career Pathway' | 'Technical & Vocational (TVET) Pathway';
 
 export interface ECZSubjectGrade {
   subject: string;
-  grade: number; // 1 to 9 (1=Distinction, 9=Unsatisfactory)
+  grade: number; // 1 to 9 for O-Level (1=Distinction, 9=Unsatisfactory), or A-Level points
+  isCbcCore?: boolean;
 }
 
 export interface StudentProfile {
   fullName: string;
-  gradeLevel: GradeLevel;
+  gradeLevel: CBCGradeLevel;
   province: ZambianProvince;
   schoolName: string;
-  stream: SecondaryStream;
+  pathway: CBCPathway;
+  pathwayType: CBCPathwayType;
   eczGrades: ECZSubjectGrade[];
+  coreCompetencies: string[]; // Critical Thinking, Digital Literacy, Innovation & Entrepreneurship, Collaboration
   interests: string[];
   strengths: string[];
   workPreferences: string;
@@ -41,6 +59,7 @@ export interface StudentProfile {
 export interface RoadmapStep {
   stage: string;
   focus: string;
+  cbcLevel?: 'Junior Secondary (Form 1-2)' | 'Senior O-Level (Form 3-4)' | 'Advanced A-Level (Form 5-6)' | 'Tertiary / TVET' | 'Employment';
   completed?: boolean;
 }
 
@@ -55,6 +74,8 @@ export interface InstitutionRef {
 export interface CareerRecommendation {
   careerTitle: string;
   field: string;
+  cbcPathway: CBCPathway;
+  pathwayType: CBCPathwayType;
   zambiaDemandScore: number; // 60-98
   demandLevel: string;
   avgSalaryRangeZMW: string;
@@ -62,6 +83,7 @@ export interface CareerRecommendation {
   eczRequirements: {
     essentialSubjects: string[];
     minGradeTarget: string;
+    cbcKeyCompetencies: string[];
     preferredElectives: string[];
   };
   tertiaryInstitutions: InstitutionRef[];
@@ -81,6 +103,7 @@ export interface Institution {
   description: string;
   topPrograms: string[];
   eczCutoffGuide: string;
+  cbcEntryBridge: string; // How CBC O-Level and A-Level graduates enter
   helsbEligible: boolean;
   cdfEligible: boolean;
   website: string;
@@ -90,7 +113,7 @@ export interface Institution {
 export interface MilestoneItem {
   id: string;
   title: string;
-  category: 'ECZ Secondary' | 'Tertiary Admission' | 'Financial & Bursary' | 'Attachment & Skills' | 'Professional Entry';
+  category: 'CBC Secondary (Form 1-4)' | 'CBC A-Level (Form 5-6)' | 'Tertiary Admission' | 'Financial & Bursary' | 'Attachment & Skills' | 'Professional Entry';
   timeline: string;
   description: string;
   isCompleted: boolean;
@@ -102,17 +125,20 @@ export interface CounselorStudent {
   name: string;
   school: string;
   grade: string;
-  stream: string;
+  pathway: CBCPathway;
+  pathwayType: CBCPathwayType;
   eczPoints: number;
   targetCareer: string;
-  status: 'Needs Review' | 'On Track' | 'Subject Mismatch' | 'Bursary Applicant';
+  status: 'Needs Review' | 'On Track' | 'Pathway Mismatch' | 'Bursary Applicant' | 'A-Level Candidate';
   notes: string[];
   verifiedByCounselor: boolean;
+  cbcCompetencyRating?: 'Emerging' | 'Competent' | 'Proficient' | 'Exemplary';
 }
 
 export interface IndustryOutlook {
   sectorName: string;
   growthRate: string;
+  cbcAlignedPathway: CBCPathway;
   keyDrivers: string;
   topInDemandRoles: string[];
   zambianKeyEmployers: string[];

@@ -206,20 +206,25 @@ export const CounselorPortal: React.FC = () => {
               </div>
 
               {/* Subject Breakdown Card */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                 <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                  <span className="text-[10px] text-slate-500 font-bold uppercase">Secondary Track</span>
-                  <div className="font-bold text-slate-900 mt-0.5">{selectedStudent.stream}</div>
+                  <span className="text-[10px] text-slate-500 font-bold uppercase">CBC Pathway</span>
+                  <div className="font-bold text-slate-900 mt-0.5 truncate">{selectedStudent.pathway}</div>
                 </div>
 
                 <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                  <span className="text-[10px] text-slate-500 font-bold uppercase">Best 6 ECZ Aggregate</span>
+                  <span className="text-[10px] text-slate-500 font-bold uppercase">Pathway Stream</span>
+                  <div className="font-bold text-indigo-700 mt-0.5 truncate">{selectedStudent.pathwayType}</div>
+                </div>
+
+                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                  <span className="text-[10px] text-slate-500 font-bold uppercase">ECZ / SBA Points</span>
                   <div className="font-black text-emerald-700 text-base mt-0.5">{selectedStudent.eczPoints} Points</div>
                 </div>
 
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl col-span-2 sm:col-span-1">
-                  <span className="text-[10px] text-slate-500 font-bold uppercase">Target Career</span>
-                  <div className="font-bold text-slate-900 mt-0.5 truncate">{selectedStudent.targetCareer}</div>
+                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                  <span className="text-[10px] text-slate-500 font-bold uppercase">SBA Practical Level</span>
+                  <div className="font-bold text-amber-700 mt-0.5">{selectedStudent.cbcCompetencyRating || 'Proficient'}</div>
                 </div>
               </div>
 

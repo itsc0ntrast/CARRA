@@ -1,11 +1,14 @@
-import { CareerRecommendation } from '../types';
+import { CareerRecommendation, CBCPathway, CBCPathwayType } from '../types';
 
 export interface RecommendParams {
   studentName?: string;
   gradeLevel?: string;
   secondaryStream?: string;
+  cbcPathway?: CBCPathway;
+  pathwayType?: CBCPathwayType;
   favoriteSubjects?: string[];
   eczGrades?: Record<string, number>;
+  coreCompetencies?: string[];
   interests?: string[];
   personalStrengths?: string;
   workPreferences?: string;
@@ -21,32 +24,34 @@ export function generateClientRecommendations(params: RecommendParams): {
 } {
   const {
     studentName = 'Learner',
-    gradeLevel = 'Grade 12',
-    secondaryStream = 'Pure Sciences (STEM)',
-    favoriteSubjects = [],
+    gradeLevel = 'Form 4 (Senior O-Level)',
+    secondaryStream = 'Natural Sciences (NS)',
+    cbcPathway = (params.secondaryStream as CBCPathway) || 'Natural Sciences (NS)',
     interests = [],
     province = 'Zambia',
   } = params;
 
-  const streamLower = secondaryStream.toLowerCase();
-  const interestList = interests.map(i => i.toLowerCase());
+  const pathwayStr = (cbcPathway || secondaryStream || '').toLowerCase();
 
   let recommendations: CareerRecommendation[] = [];
 
-  // Stream-based & Interest-based tailored intelligence
-  if (streamLower.includes('sciences') || streamLower.includes('stem')) {
+  // 1. Natural Sciences (NS)
+  if (pathwayStr.includes('natural') || pathwayStr.includes('science') || pathwayStr.includes('stem')) {
     recommendations = [
       {
         careerTitle: "Mining & Mineral Processing Engineer",
         field: "Mining, Metallurgy & Natural Resources",
+        cbcPathway: "Natural Sciences (NS)",
+        pathwayType: "Academic Career Pathway",
         zambiaDemandScore: 96,
         demandLevel: "Very High Demand",
         avgSalaryRangeZMW: "K18,000 - K45,000 / month",
-        fitExplanation: `Ideal for ${studentName}'s STEM strengths. Directly fuels Zambia's national drive to produce 3 million metric tonnes of copper by 2031, expanding in Solwezi, Kitwe, and Ndola.`,
+        fitExplanation: `Directly aligns with ${studentName}'s CBC Natural Sciences core (Pure Physics, Chemistry, and Advanced Mathematics). Accelerates Zambia's national drive to produce 3 million metric tonnes of copper by 2031.`,
         eczRequirements: {
-          essentialSubjects: ["Mathematics", "Pure Physics", "Pure Chemistry (or Science)"],
-          minGradeTarget: "Distinction 1-2 or Merit 3-4 in Maths & Physics; Best 6 aggregate under 14 points",
-          preferredElectives: ["Technical Drawing / Design & Technology", "Computer Studies"]
+          essentialSubjects: ["Mathematics", "Pure Physics", "Pure Chemistry", "English Language", "Civic Education"],
+          minGradeTarget: "Distinction 1-2 or Merit 3-4 in Maths & Physics; Best 6 aggregate under 14 points (or Form 6 A-Level Mathematics & Physics passes)",
+          cbcKeyCompetencies: ["Quantitative Analysis", "Scientific Investigation", "Safety Compliance Standards"],
+          preferredElectives: ["Computer Science (Practical)", "Technical Drawing"]
         },
         tertiaryInstitutions: [
           { name: "Copperbelt University (CBU)", program: "BEng Mining Engineering / Metallurgy", location: "Kitwe, Copperbelt", helsbEligible: true },
@@ -54,25 +59,57 @@ export function generateClientRecommendations(params: RecommendParams): {
           { name: "Northern Technical College (NORTEC)", program: "Heavy Equipment Repair & Mining Plant Tech", location: "Ndola, Copperbelt", helsbEligible: true }
         ],
         roadmapSteps: [
-          { stage: "Grade 10-12 (ECZ)", focus: "Secure Credit 6 or better in all 7 subjects, aiming for Distinction 1-2 in Mathematics and Physics." },
-          { stage: "Post-Secondary Admission", focus: "Apply to CBU School of Mines or UNZA Natural Sciences; submit HELSB Tier 1 student loan application." },
+          { stage: "Form 3-4 (Senior O-Level)", focus: "Complete CBC School-Based Assessment (SBA) lab portfolio; secure Credit 6 or better in all 7 subjects with Distinction in Maths and Physics." },
+          { stage: "Form 5-6 (A-Level) or Direct Tertiary", focus: "Option A: Form 5-6 A-Level in Mathematics, Physics, Chemistry. Option B: Direct admission to CBU School of Mines or UNZA Natural Sciences with HELSB Tier 1 loan." },
           { stage: "Year 2-3 (Attachment)", focus: "Complete mandatory 3-month industrial attachment at First Quantum Minerals (Kansanshi/Trident), Mopani, or Lumwana." },
-          { stage: "Graduate Entry", focus: "Register as Graduate Engineer with Engineering Institution of Zambia (EIZ); join mining graduate trainee cohort." }
+          { stage: "Graduate Registration", focus: "Register as Graduate Engineer with Engineering Institution of Zambia (EIZ); enter mining graduate trainee program." }
         ],
         skillsToBuild: ["Geological CAD Software", "Open-Pit & Underground Safety Standards", "Ore Blending & Extraction", "Project Management"],
         fundingOptions: ["HELSB Government Student Loan", "First Quantum Minerals Apprenticeship Bursary", "Mining Chamber Scholarships"]
       },
       {
+        careerTitle: "Medical Doctor / Clinical Sciences Specialist",
+        field: "Healthcare & Clinical Medicine",
+        cbcPathway: "Natural Sciences (NS)",
+        pathwayType: "Academic Career Pathway",
+        zambiaDemandScore: 95,
+        demandLevel: "Tier 1 Critical Need",
+        avgSalaryRangeZMW: "K17,000 - K42,000 / month",
+        fitExplanation: "Urgent national demand across provincial and district hospitals in Zambia, with priority public recruitment by the Ministry of Health (MOH).",
+        eczRequirements: {
+          essentialSubjects: ["Biology", "Pure Chemistry", "Mathematics", "English Language", "Pure Physics"],
+          minGradeTarget: "Distinction 1-2 in Biology & Chemistry; Best 6 aggregate under 10 points for MBChB",
+          cbcKeyCompetencies: ["Scientific Inquiry", "Diagnostic Reasoning", "Empathetic Patient Communication"],
+          preferredElectives: ["Civic Education", "ICT"]
+        },
+        tertiaryInstitutions: [
+          { name: "University of Zambia (UNZA)", program: "Bachelor of Medicine and Surgery (MBChB) - Ridgeway", location: "Lusaka", helsbEligible: true },
+          { name: "Levy Mwanawasa Medical University (LMMU)", program: "MBChB / BSc Clinical Sciences", location: "Lusaka", helsbEligible: true },
+          { name: "Mulungushi University", program: "Bachelor of Medicine & Surgery (Livingstone Campus)", location: "Livingstone", helsbEligible: true }
+        ],
+        roadmapSteps: [
+          { stage: "Form 3-4 (Senior O-Level)", focus: "Achieve top distinction marks in Biology, Chemistry, and Mathematics (under 10 points total)." },
+          { stage: "Form 5-6 (A-Level) or Pre-Med", focus: "Complete Form 5-6 A-Level in Biology/Chemistry or enter UNZA Natural Sciences / LMMU foundation." },
+          { stage: "Clinical Rotations & Internship", focus: "Complete 18-month paid junior resident internship at University Teaching Hospital (UTH) or Ndola Teaching Hospital." },
+          { stage: "Full Registration", focus: "Attain full practicing license from the Health Professions Council of Zambia (HPCZ)." }
+        ],
+        skillsToBuild: ["Clinical Diagnosis", "Patient Empathy & Triage", "Pharmacology", "Emergency Healthcare Systems"],
+        fundingOptions: ["HELSB Medical Quota Loan", "Ministry of Health Rural Sponsorship", "Presidential High Achievers Bursary"]
+      },
+      {
         careerTitle: "Software Engineer & FinTech Developer",
         field: "Information & Communications Technology (ICT)",
+        cbcPathway: "Technology & Computer Science (TECH)",
+        pathwayType: "Technical & Vocational (TVET) Pathway",
         zambiaDemandScore: 93,
         demandLevel: "High Growth",
         avgSalaryRangeZMW: "K15,000 - K38,000 / month",
-        fitExplanation: "Booming digital financial inclusion across Zambia with Airtel Money, MTN MoMo, Zamtel, commercial banks, and government e-services digitization.",
+        fitExplanation: "Capitalizes on the new CBC Computer Science curriculum. High expansion in mobile money (Airtel Money, MTN MoMo, Zamtel), commercial banks, and Smart Zambia e-services.",
         eczRequirements: {
-          essentialSubjects: ["Mathematics", "English Language", "Computer Studies or Science"],
-          minGradeTarget: "Credit 6 or better in 5 subjects including Mathematics; Merit in Computer Studies is an asset",
-          preferredElectives: ["Additional Mathematics", "Commerce / Principles of Accounts"]
+          essentialSubjects: ["Mathematics", "English Language", "Computer Science (Practical) or ICT", "Civic Education"],
+          minGradeTarget: "Credit 6 or better in 5 subjects with Merit in Mathematics & Computer Science",
+          cbcKeyCompetencies: ["Algorithmic Problem Solving", "Digital Systems Architecture", "Cybersecurity Awareness"],
+          preferredElectives: ["Additional Mathematics", "Physics"]
         },
         tertiaryInstitutions: [
           { name: "University of Zambia (UNZA)", program: "BSc Computer Science / Information Systems", location: "Lusaka", helsbEligible: true },
@@ -81,136 +118,186 @@ export function generateClientRecommendations(params: RecommendParams): {
           { name: "ZCAS University", program: "BSc Computing with Mobile Application Development", location: "Lusaka", helsbEligible: false }
         ],
         roadmapSteps: [
-          { stage: "Grade 10-12 (ECZ)", focus: "Master analytical problem-solving and algorithmic thinking; explore basic Python or web development." },
-          { stage: "Tertiary Education", focus: "Pursue accredited degree/diploma while building a GitHub portfolio of local problem-solving apps." },
-          { stage: "Internship / Attachment", focus: "Secure placement with local fintechs, banks (ZANACO, Stanbic, Absa), or telecom operators." },
+          { stage: "Form 3-4 (Senior O-Level)", focus: "Build practical coding projects as part of your CBC Computer Science portfolio." },
+          { stage: "Tertiary Studies", focus: "Pursue accredited degree or diploma while contributing to local Zambian open-source problem solving." },
+          { stage: "Fintech Attachment", focus: "Secure 3 to 6-month placement with local fintechs, commercial banks (ZANACO, Stanbic, Absa), or telecoms." },
           { stage: "Professional Growth", focus: "Specialize in cloud services, payment APIs, cybersecurity, or mobile app development." }
         ],
         skillsToBuild: ["TypeScript/JavaScript", "Python & SQL", "RESTful & Payment Gateway APIs", "Cloud Architecture (AWS/GCP)"],
         fundingOptions: ["HELSB Loans for STEM", "ICT Sector Youth Grants", "Constituency Development Fund (CDF) Skills Bursaries"]
-      },
+      }
+    ];
+  } 
+  // 2. Technology & Computer Science (TECH)
+  else if (pathwayStr.includes('tech') || pathwayStr.includes('computer')) {
+    recommendations = [
       {
-        careerTitle: "Medical Doctor / Clinical Sciences Specialist",
-        field: "Healthcare & Clinical Medicine",
+        careerTitle: "Software & Mobile FinTech Engineer",
+        field: "Information & Communications Technology (ICT)",
+        cbcPathway: "Technology & Computer Science (TECH)",
+        pathwayType: "Technical & Vocational (TVET) Pathway",
         zambiaDemandScore: 95,
-        demandLevel: "Tier 1 Critical Need",
-        avgSalaryRangeZMW: "K17,000 - K42,000 / month",
-        fitExplanation: "Urgent national demand across provincial and district hospitals in Zambia, with priority public recruitment by the Ministry of Health (MOH).",
-        eczRequirements: {
-          essentialSubjects: ["Biology", "Chemistry", "Mathematics", "English Language", "Physics"],
-          minGradeTarget: "Distinction 1-2 in Biology & Chemistry; Best 6 aggregate under 10 points for MBChB",
-          preferredElectives: ["Civic Education", "Food & Nutrition"]
-        },
-        tertiaryInstitutions: [
-          { name: "University of Zambia (UNZA)", program: "Bachelor of Medicine and Surgery (MBChB) - Ridgeway", location: "Lusaka", helsbEligible: true },
-          { name: "Levy Mwanawasa Medical University (LMMU)", program: "MBChB / BSc Clinical Sciences", location: "Lusaka", helsbEligible: true },
-          { name: "Mulungushi University", program: "Bachelor of Medicine & Surgery (Livingstone Campus)", location: "Livingstone", helsbEligible: true }
-        ],
-        roadmapSteps: [
-          { stage: "Grade 10-12 (ECZ)", focus: "Achieve top distinction marks in Biology, Chemistry, and Mathematics (under 10 points total)." },
-          { stage: "Pre-Med & Medical School", focus: "Enter UNZA Natural Sciences or LMMU; complete rigorous preclinical and clinical rotations." },
-          { stage: "Internship Rotation", focus: "Complete 18-month paid junior resident internship at University Teaching Hospital (UTH) or Ndola Teaching Hospital." },
-          { stage: "Full Registration", focus: "Attain full practicing license from the Health Professions Council of Zambia (HPCZ)." }
-        ],
-        skillsToBuild: ["Clinical Diagnosis", "Patient Empathy & Triage", "Pharmacology", "Emergency Healthcare Systems"],
-        fundingOptions: ["HELSB Medical Quota Loan", "Ministry of Health Rural Sponsorship", "Presidential High Achievers Bursary"]
-      }
-    ];
-  } else if (streamLower.includes('commercial') || streamLower.includes('business')) {
-    recommendations = [
-      {
-        careerTitle: "Chartered Financial Accountant & Auditor",
-        field: "Banking, Finance & Corporate Governance",
-        zambiaDemandScore: 91,
-        demandLevel: "High Demand",
-        avgSalaryRangeZMW: "K14,000 - K36,000 / month",
-        fitExplanation: `Aligns with ${studentName}'s commercial foundation. ZICA and ACCA qualifications are universally demanded by commercial banks, mining enterprises, and ZRA.`,
-        eczRequirements: {
-          essentialSubjects: ["Principles of Accounts", "Commerce", "Mathematics", "English Language"],
-          minGradeTarget: "Credit 6 or better in 5 subjects with Merit in Principles of Accounts & Mathematics",
-          preferredElectives: ["Economics", "Computer Studies"]
-        },
-        tertiaryInstitutions: [
-          { name: "ZCAS University", program: "ZICA / ACCA Professional Accounting & BSc Finance", location: "Lusaka", helsbEligible: false },
-          { name: "University of Zambia (UNZA)", program: "Bachelor of Accountancy / BBA", location: "Lusaka", helsbEligible: true },
-          { name: "Copperbelt University (CBU)", program: "Bachelor of Accountancy", location: "Kitwe", helsbEligible: true },
-          { name: "Evelyn Hone College", program: "Diploma in Accountancy", location: "Lusaka", helsbEligible: true }
-        ],
-        roadmapSteps: [
-          { stage: "Grade 10-12 (ECZ)", focus: "Secure Credit 5 or better in Mathematics and Principles of Accounts." },
-          { stage: "Professional Enrolment", focus: "Register as a student member with Zambia Institute of Chartered Accountants (ZICA)." },
-          { stage: "Articleship / Attachment", focus: "Complete practical accounting internship at an audit firm or corporate finance office." },
-          { stage: "ZICA Licensing", focus: "Attain CA Zambia charter and full practicing certificate." }
-        ],
-        skillsToBuild: ["IFRS Accounting Standards", "Taxation & ZRA Compliance", "Financial Modeling & Excel", "Corporate Auditing"],
-        fundingOptions: ["HELSB Loans for Business Degrees", "CDF Skills Bursary for Evelyn Hone Diploma", "Bank Graduate Bursaries"]
-      },
-      {
-        careerTitle: "Supply Chain & Logistics Specialist",
-        field: "Procurement, Trade & Cross-Border Logistics",
-        zambiaDemandScore: 88,
-        demandLevel: "Steady Growth",
-        avgSalaryRangeZMW: "K12,000 - K30,000 / month",
-        fitExplanation: "Zambia's landlinked hub status in SADC (Walvis Bay, Dar es Salaam, Beira corridors) requires skilled logistics and customs managers.",
-        eczRequirements: {
-          essentialSubjects: ["Commerce", "Mathematics", "English Language", "Geography"],
-          minGradeTarget: "Credit 6 in 5 subjects including Mathematics and English",
-          preferredElectives: ["Economics", "Computer Studies"]
-        },
-        tertiaryInstitutions: [
-          { name: "University of Lusaka (UNILUS)", program: "BSc Purchasing and Supply Chain Management", location: "Lusaka", helsbEligible: false },
-          { name: "Copperbelt University (CBU)", program: "BSc Transport and Logistics Management", location: "Kitwe", helsbEligible: true },
-          { name: "Evelyn Hone College", program: "Chartered Institute of Procurement & Supply (CIPS)", location: "Lusaka", helsbEligible: true }
-        ],
-        roadmapSteps: [
-          { stage: "Grade 10-12 (ECZ)", focus: "Build strong communication, business acumen, and numerical literacy." },
-          { stage: "Tertiary Studies", focus: "Pursue CIPS qualification or degree in logistics and supply chain." },
-          { stage: "Field Attachment", focus: "Train at border clearance points (Chirundu, Nakonde, Kasumbalesa) or freight forwarders." },
-          { stage: "Professional Licensing", focus: "Register with Zambia Institute of Purchasing and Supply (ZIPS)." }
-        ],
-        skillsToBuild: ["ASYCUDA World Customs Software", "Inventory Control", "Contract Negotiation", "Fleet Management"],
-        fundingOptions: ["HELSB Student Loans", "CDF Youth Skills Bursaries", "Freight Forwarders Trainee Sponsorships"]
-      },
-      {
-        careerTitle: "Digital Marketing & Enterprise Business Analyst",
-        field: "Marketing, Consumer Analytics & E-Commerce",
-        zambiaDemandScore: 86,
         demandLevel: "High Growth",
-        avgSalaryRangeZMW: "K10,000 - K28,000 / month",
-        fitExplanation: "Rapid expansion of local Zambian brands, retail chains (Shoprite, Choppies, Pick n Pay), and mobile financial services marketing.",
+        avgSalaryRangeZMW: "K16,000 - K40,000 / month",
+        fitExplanation: `Tailored for ${studentName}'s CBC Technology track. Directly leverages practical Computer Science coursework and hands-on coding.`,
         eczRequirements: {
-          essentialSubjects: ["English Language", "Commerce", "Mathematics"],
-          minGradeTarget: "Credit 6 in 5 subjects with Merit in English Language",
-          preferredElectives: ["Literature in English", "Computer Studies"]
+          essentialSubjects: ["Computer Science (Practical)", "Mathematics", "English Language", "Civic Education"],
+          minGradeTarget: "Credit 6 or better in 5 subjects with Merit in Mathematics & Computer Science",
+          cbcKeyCompetencies: ["Computational Thinking", "Software Testing & Debugging", "Digital Innovation"],
+          preferredElectives: ["Physics", "Design & Technology"]
         },
         tertiaryInstitutions: [
-          { name: "University of Zambia (UNZA)", program: "Bachelor of Arts in Media & Communication Studies", location: "Lusaka", helsbEligible: true },
-          { name: "ZCAS University", program: "BSc Marketing and Digital Communications", location: "Lusaka", helsbEligible: false },
-          { name: "Evelyn Hone College", program: "Diploma in Marketing (ZIM / CIM)", location: "Lusaka", helsbEligible: true }
+          { name: "Copperbelt University (CBU)", program: "BSc Software Engineering / Computer Engineering", location: "Kitwe", helsbEligible: true },
+          { name: "University of Zambia (UNZA)", program: "BSc Computer Science", location: "Lusaka", helsbEligible: true },
+          { name: "Evelyn Hone College", program: "Diploma in Information Technology", location: "Lusaka", helsbEligible: true }
         ],
         roadmapSteps: [
-          { stage: "Grade 10-12 (ECZ)", focus: "Hone creative writing, public speaking, and digital content creation." },
-          { stage: "Tertiary Studies", focus: "Earn accredited marketing qualification while building real-world digital campaigns." },
-          { stage: "Industry Placement", focus: "Intern with advertising agencies, FMCG companies, or tech startups." },
-          { stage: "Professional Certification", focus: "Join Zambia Institute of Marketing (ZIM)." }
+          { stage: "Form 3-4 (Senior O-Level)", focus: "Complete CBC practical software project portfolio; achieve Distinction/Merit in Computer Science." },
+          { stage: "Tertiary Admission", focus: "Enter CBU Software Engineering or Evelyn Hone IT Diploma; apply for CDF or HELSB funding." },
+          { stage: "Industry Attachment", focus: "Intern with commercial banks, payment gateways (Flutterwave, Kazang), or telecoms." },
+          { stage: "Professional Practice", focus: "Register with the Information and Communications Technology Association of Zambia (ICTAZ)." }
         ],
-        skillsToBuild: ["Data Analytics & SEO", "Brand Strategy", "Content Production", "Customer Relationship Management (CRM)"],
-        fundingOptions: ["HELSB Loans for UNZA", "CDF Vocational Grants", "Private Enterprise Apprenticeships"]
+        skillsToBuild: ["React/TypeScript", "Python & API Architecture", "Mobile App Development", "Cybersecurity Protocols"],
+        fundingOptions: ["HELSB STEM Loans", "Smart Zambia Youth Innovation Fund", "CDF Skills Bursaries"]
+      },
+      {
+        careerTitle: "Heavy Equipment Repair & Mining Plant Technologist",
+        field: "Mechanical Engineering & Heavy Machinery",
+        cbcPathway: "Technology & Computer Science (TECH)",
+        pathwayType: "Technical & Vocational (TVET) Pathway",
+        zambiaDemandScore: 94,
+        demandLevel: "Very High Demand",
+        avgSalaryRangeZMW: "K14,000 - K34,000 / month",
+        fitExplanation: "Continuous shortage of certified hydraulic, diesel engine, and excavator maintenance technologists across Zambia's open-pit mines and construction firms.",
+        eczRequirements: {
+          essentialSubjects: ["Design and Technology", "Mathematics", "Physics / Science", "English Language"],
+          minGradeTarget: "5 Credits or relevant passes with Credit 6 in Mathematics",
+          cbcKeyCompetencies: ["Mechanical Diagnostics", "Industrial Safety Protocols", "Hydraulic Schematics"],
+          preferredElectives: ["Technical Drawing", "Computer Science"]
+        },
+        tertiaryInstitutions: [
+          { name: "Northern Technical College (NORTEC)", program: "Diploma in Heavy Equipment Repair (HER)", location: "Ndola", helsbEligible: true },
+          { name: "Luanshya Technical and Business College", program: "Diploma in Automotive & Plant Engineering", location: "Luanshya", helsbEligible: true },
+          { name: "Evelyn Hone College", program: "Diploma in Production Engineering", location: "Lusaka", helsbEligible: true }
+        ],
+        roadmapSteps: [
+          { stage: "Form 3-4 (Senior O-Level)", focus: "Excel in CBC Design & Technology workshop assessments and mechanics." },
+          { stage: "TEVETA College Enrolment", focus: "Join NORTEC; apply for 100% tuition coverage via the local CDF skills bursary." },
+          { stage: "Mine Site Apprenticeship", focus: "Work hands-on servicing Komatsu, Caterpillar, and Sandvik mine equipment in Solwezi or Kitwe." },
+          { stage: "EIZ Certification", focus: "Attain Engineering Institution of Zambia (EIZ) Technologist practicing status." }
+        ],
+        skillsToBuild: ["Hydraulic Diagnostics", "Diesel Injection Systems", "Industrial Telematics", "OSHA Safety Standards"],
+        fundingOptions: ["CDF Skills Development Bursaries (100% tuition)", "TEVETA Bursaries", "Mine Apprenticeships"]
+      },
+      {
+        careerTitle: "Solar PV & Renewable Energy Systems Technician",
+        field: "Renewable Energy & Electrical Engineering",
+        cbcPathway: "Technology & Computer Science (TECH)",
+        pathwayType: "Technical & Vocational (TVET) Pathway",
+        zambiaDemandScore: 91,
+        demandLevel: "Rapidly Expanding",
+        avgSalaryRangeZMW: "K11,000 - K28,000 / month",
+        fitExplanation: "National push for solar mini-grids, industrial rooftop PV, and battery storage to alleviate hydroelectric drought stress.",
+        eczRequirements: {
+          essentialSubjects: ["Physics / Science", "Mathematics", "Design and Technology", "English Language"],
+          minGradeTarget: "Credit 6 in Mathematics and Science",
+          cbcKeyCompetencies: ["Circuit Analysis", "Renewable Power Sizing", "Electrical Installation Standards"],
+          preferredElectives: ["Computer Science"]
+        },
+        tertiaryInstitutions: [
+          { name: "Northern Technical College (NORTEC)", program: "Diploma in Electrical Power & Renewable Energy", location: "Ndola", helsbEligible: true },
+          { name: "Evelyn Hone College", program: "Diploma in Electrical Engineering", location: "Lusaka", helsbEligible: true },
+          { name: "Copperbelt University (CBU)", program: "BSc Renewable Energy Systems", location: "Kitwe", helsbEligible: true }
+        ],
+        roadmapSteps: [
+          { stage: "Form 3-4 (Senior O-Level)", focus: "Master electrical theory and CBC circuit workshop practicals." },
+          { stage: "TEVETA / Degree Enrolment", focus: "Study at NORTEC or Evelyn Hone with CDF bursary support." },
+          { stage: "Field Practical", focus: "Participate in solar farm installations with ZESCO, CEC, or off-grid solar providers." },
+          { stage: "Energy Licensing", focus: "Obtain Energy Regulation Board (ERB) and EIZ installation accreditations." }
+        ],
+        skillsToBuild: ["Solar Array Sizing & CAD", "Battery Inverter Synchronization", "High-Voltage Safety", "Energy Auditing"],
+        fundingOptions: ["CDF Skills Development Bursary", "Rural Electrification Authority Grants", "HELSB Student Loans"]
       }
     ];
-  } else {
-    // Technicals, TVET, Agriculture & General
+  } 
+  // 3. Home Economics, Hospitality & Tourism (HEH)
+  else if (pathwayStr.includes('hospitality') || pathwayStr.includes('tourism') || pathwayStr.includes('home')) {
     recommendations = [
       {
-        careerTitle: "Commercial Agribusiness & Irrigation Specialist",
-        field: "Agriculture, Food Security & Water Management",
+        careerTitle: "Eco-Tourism & Wildlife Lodge Operations Manager",
+        field: "Tourism, Hospitality & Conservation",
+        cbcPathway: "Home Economics, Hospitality & Tourism (HEH)",
+        pathwayType: "Technical & Vocational (TVET) Pathway",
         zambiaDemandScore: 92,
-        demandLevel: "National Priority Pillar",
-        avgSalaryRangeZMW: "K12,000 - K32,000 / month",
-        fitExplanation: "Agriculture is Zambia's designated economic diversification pillar. Modern precision irrigation, crop disease diagnostics, and value-addition agribusinesses are booming.",
+        demandLevel: "High Growth",
+        avgSalaryRangeZMW: "K14,000 - K35,000 / month",
+        fitExplanation: `Directly utilizes the new CBC Travel and Tourism curriculum. Zambia's safari hubs (South Luangwa, Lower Zambezi, Livingstone/Victoria Falls) need skilled hospitality managers.`,
         eczRequirements: {
-          essentialSubjects: ["Agricultural Science", "Biology", "Mathematics", "Science / Chemistry"],
+          essentialSubjects: ["Travel and Tourism (New CBC)", "English Language", "Food and Nutrition / Home Management", "Mathematics", "Civic Education"],
+          minGradeTarget: "Credit 6 or better in 5 subjects with Merit in English Language & Travel/Tourism",
+          cbcKeyCompetencies: ["Customer Experience Design", "Eco-Tourism Sustainability", "Hospitality Operations"],
+          preferredElectives: ["Geography", "Biology / French"]
+        },
+        tertiaryInstitutions: [
+          { name: "Evelyn Hone College", program: "Diploma in Travel & Tourism Management", location: "Lusaka", helsbEligible: true },
+          { name: "Livingstone International University of Tourism (LIUTEBM)", program: "BSc Tourism and Hospitality Management", location: "Livingstone", helsbEligible: false },
+          { name: "University of Zambia (UNZA)", program: "BA in Tourism Studies / Natural Resources", location: "Lusaka", helsbEligible: true }
+        ],
+        roadmapSteps: [
+          { stage: "Form 3-4 (Senior O-Level)", focus: "Excel in CBC Travel & Tourism practical projects and customer service demonstrations." },
+          { stage: "Tertiary Studies", focus: "Complete Evelyn Hone Tourism Diploma or degree; apply for CDF skills bursary support." },
+          { stage: "Lodge Internship", focus: "Undertake 6-month hands-on attachment at safari camps in South Luangwa or Livingstone." },
+          { stage: "Management Career", focus: "Oversee international guest relations, safari logistics, and conservation eco-standards." }
+        ],
+        skillsToBuild: ["Safari Booking Systems & Amadeus", "Food & Beverage Costing", "Wildlife Conservation Ethics", "Multilingual Communication"],
+        fundingOptions: ["CDF Skills Development Bursaries", "Zambia Tourism Agency Youth Grants", "HELSB Student Loans"]
+      },
+      {
+        careerTitle: "Executive Culinary Chef & Food Technologist",
+        field: "Culinary Arts, Food Science & Nutrition",
+        cbcPathway: "Home Economics, Hospitality & Tourism (HEH)",
+        pathwayType: "Technical & Vocational (TVET) Pathway",
+        zambiaDemandScore: 88,
+        demandLevel: "Steady Demand",
+        avgSalaryRangeZMW: "K12,000 - K30,000 / month",
+        fitExplanation: "High expansion in commercial catering, food processing, international hotel chains in Lusaka and Ndola, and export agribusiness value-addition.",
+        eczRequirements: {
+          essentialSubjects: ["Food and Nutrition", "English Language", "Chemistry / Science", "Mathematics"],
+          minGradeTarget: "Credit 6 in Food & Nutrition, English, and Science",
+          cbcKeyCompetencies: ["Food Safety & HACCP", "Nutritional Formulation", "Culinary Execution"],
+          preferredElectives: ["Biology", "Commerce"]
+        },
+        tertiaryInstitutions: [
+          { name: "Evelyn Hone College", program: "Diploma in Catering & Hospitality Management", location: "Lusaka", helsbEligible: true },
+          { name: "Natural Resources Development College (NRDC)", program: "Diploma in Food Science & Post-Harvest Tech", location: "Lusaka", helsbEligible: true }
+        ],
+        roadmapSteps: [
+          { stage: "Form 3-4 (Senior O-Level)", focus: "Demonstrate culinary mastery and food hygiene in CBC School-Based Assessment practicals." },
+          { stage: "College Training", focus: "Enroll in Evelyn Hone or NRDC; secure CDF skills bursary for kitchen toolkits." },
+          { stage: "Hotel Attachment", focus: "Complete practical apprenticeship at 5-star hotels (Radisson Blu, Taj Pamodzi, Protea)." },
+          { stage: "Professional Mastery", focus: "Head kitchen operations or launch commercial food processing enterprise." }
+        ],
+        skillsToBuild: ["Menu Engineering", "HACCP Food Safety", "Indigenous Zambian Fusion Cuisine", "Bulk Food Logistics"],
+        fundingOptions: ["CDF Skills Development Bursaries", "TEVETA Apprenticeship Grants"]
+      }
+    ];
+  }
+  // 4. Agricultural Sciences (AS)
+  else if (pathwayStr.includes('agri') || pathwayStr.includes('farm')) {
+    recommendations = [
+      {
+        careerTitle: "Commercial Agribusiness & Precision Irrigation Specialist",
+        field: "Agriculture, Food Security & Water Management",
+        cbcPathway: "Agricultural Sciences (AS)",
+        pathwayType: "Academic Career Pathway",
+        zambiaDemandScore: 94,
+        demandLevel: "National Priority Pillar",
+        avgSalaryRangeZMW: "K14,000 - K35,000 / month",
+        fitExplanation: `Pillar of Zambia's 8NDP. Leveraging ${studentName}'s CBC Agricultural Science core to implement solar-powered drip irrigation, crop diagnostics, and value-addition agribusinesses.`,
+        eczRequirements: {
+          essentialSubjects: ["Agricultural Science (Core)", "Biology", "Mathematics", "Chemistry / Science", "English Language"],
           minGradeTarget: "Credit 6 in English, Maths and Agricultural Science/Biology",
+          cbcKeyCompetencies: ["Precision Irrigation Sizing", "Farm Budgeting & Enterprise Management", "Soil Pathology"],
           preferredElectives: ["Economics / Commerce", "Geography"]
         },
         tertiaryInstitutions: [
@@ -219,77 +306,94 @@ export function generateClientRecommendations(params: RecommendParams): {
           { name: "Mulungushi University", program: "BSc Agribusiness Management / Agriculture", location: "Kabwe, Central Province", helsbEligible: true }
         ],
         roadmapSteps: [
-          { stage: "Grade 10-12 (ECZ)", focus: "Master practical agricultural projects and science labs; join Junior Engineers Technicians & Scientists (JETS) club." },
-          { stage: "Tertiary Studies", focus: "Enroll in NRDC or UNZA School of Agricultural Sciences; emphasize smart solar irrigation and farm tech." },
+          { stage: "Form 3-4 (Senior O-Level)", focus: "Manage practical farm plots and soil testing in your CBC agricultural school portfolio." },
+          { stage: "Form 5-6 (A-Level) or College", focus: "Enroll in NRDC or UNZA School of Agricultural Sciences; emphasize smart solar irrigation." },
           { stage: "Farm Placement", focus: "Undertake field training with commercial farming enterprises in Mkushi, Chisamba, or Mazabuka." },
           { stage: "Career / Venture", focus: "Work with multinational agribusinesses, NGO food programs, or launch modern farm management services." }
         ],
         skillsToBuild: ["Solar Drip Irrigation Design", "Farm Enterprise Budgeting", "Soil & Crop Diagnostics", "Agri-Supply Chain Logistics"],
         fundingOptions: ["HELSB Loans", "Ministry of Agriculture Youth Scholarships", "CDF Agricultural Skills Bursary"]
-      },
+      }
+    ];
+  }
+  // 5. Business, Commerce & Finance (BCF)
+  else if (pathwayStr.includes('business') || pathwayStr.includes('commerce') || pathwayStr.includes('finance')) {
+    recommendations = [
       {
-        careerTitle: "Heavy Equipment Repair & Mining Plant Technologist",
-        field: "Mechanical Engineering & Heavy Machinery",
-        zambiaDemandScore: 94,
-        demandLevel: "Very High Demand",
-        avgSalaryRangeZMW: "K14,000 - K34,000 / month",
-        fitExplanation: "Continuous shortage of certified hydraulic, diesel engine, and excavator maintenance technologists across Zambia's open-pit mines and construction firms.",
+        careerTitle: "Chartered Financial Accountant & Tax Auditor",
+        field: "Banking, Finance & Corporate Governance",
+        cbcPathway: "Business, Commerce & Finance (BCF)",
+        pathwayType: "Academic Career Pathway",
+        zambiaDemandScore: 92,
+        demandLevel: "High Demand",
+        avgSalaryRangeZMW: "K15,000 - K38,000 / month",
+        fitExplanation: `Aligns with ${studentName}'s CBC Business & Finance core. ZICA (CA Zambia) and ACCA chartered accountants are required across banking, mining, and ZRA compliance.`,
         eczRequirements: {
-          essentialSubjects: ["Mathematics", "Science / Physics", "Design & Technology (or Metalwork)"],
-          minGradeTarget: "5 Credits or relevant passes with Credit 6 in Mathematics",
-          preferredElectives: ["Technical Drawing", "Computer Studies"]
+          essentialSubjects: ["Principles of Accounts", "Commerce / Economics", "Mathematics", "English Language", "Civic Education"],
+          minGradeTarget: "Credit 6 or better in 5 subjects with Merit in Principles of Accounts & Mathematics",
+          cbcKeyCompetencies: ["Financial Statement Analysis", "Auditing & Tax Compliance", "Corporate Ethics"],
+          preferredElectives: ["Business Studies", "Computer Science"]
         },
         tertiaryInstitutions: [
-          { name: "Northern Technical College (NORTEC)", program: "Diploma in Heavy Equipment Repair (HER)", location: "Ndola", helsbEligible: true },
-          { name: "Luanshya Technical and Business College", program: "Diploma in Automotive & Plant Engineering", location: "Luanshya", helsbEligible: true },
-          { name: "Evelyn Hone College", program: "Diploma in Production Engineering", location: "Lusaka", helsbEligible: true }
+          { name: "ZCAS University", program: "ZICA / ACCA Professional Accounting & BSc Finance", location: "Lusaka", helsbEligible: false },
+          { name: "University of Zambia (UNZA)", program: "Bachelor of Accountancy / BBA", location: "Lusaka", helsbEligible: true },
+          { name: "Copperbelt University (CBU)", program: "Bachelor of Accountancy", location: "Kitwe", helsbEligible: true },
+          { name: "Evelyn Hone College", program: "Diploma in Accountancy", location: "Lusaka", helsbEligible: true }
         ],
         roadmapSteps: [
-          { stage: "Grade 10-12 (ECZ)", focus: "Focus on workshop practice, physics mechanics, and technical drawing." },
-          { stage: "TEVETA College Enrolment", focus: "Join NORTEC or Luanshya Tech; apply for CDF skills bursary at your civic center." },
-          { stage: "Mine Site Apprenticeship", focus: "Work hands-on servicing Komatsu, Caterpillar, and Sandvik mine equipment." },
-          { stage: "EIZ Certification", focus: "Attain Engineering Institution of Zambia (EIZ) Technologist practicing status." }
+          { stage: "Form 3-4 (Senior O-Level)", focus: "Excel in CBC financial accounting ledgers and business studies case analyses." },
+          { stage: "Professional Registration", focus: "Register as student member with Zambia Institute of Chartered Accountants (ZICA)." },
+          { stage: "Articleship / Attachment", focus: "Complete practical accounting internship at an audit firm (PwC, KPMG, BDO) or corporate finance office." },
+          { stage: "ZICA Charter", focus: "Attain CA Zambia charter and full practicing certificate." }
         ],
-        skillsToBuild: ["Hydraulic Circuit Diagnostics", "Diesel Injection Systems", "Electrical Telematics", "Industrial Safety (OSHA)"],
-        fundingOptions: ["CDF Skills Development Bursaries (100% tuition)", "TEVETA Bursaries", "Mine Apprenticeships"]
-      },
+        skillsToBuild: ["IFRS Accounting Standards", "Taxation & ZRA Compliance", "Financial Modeling & Excel", "Corporate Auditing"],
+        fundingOptions: ["HELSB Loans for Business Degrees", "CDF Skills Bursary for Evelyn Hone Diploma", "Bank Graduate Bursaries"]
+      }
+    ];
+  }
+  // Default general fallback
+  else {
+    recommendations = [
       {
-        careerTitle: "Solar PV & Renewable Energy Systems Technician",
-        field: "Renewable Energy & Electrical Engineering",
+        careerTitle: "Advocate & Legal Policy Consultant",
+        field: "Law, Governance & Public Administration",
+        cbcPathway: "Social Sciences & Humanities (SS)",
+        pathwayType: "Academic Career Pathway",
         zambiaDemandScore: 90,
-        demandLevel: "Rapidly Expanding",
-        avgSalaryRangeZMW: "K11,000 - K28,000 / month",
-        fitExplanation: "National electrification push to deploy commercial solar mini-grids, industrial rooftop solar, and backup batteries across all 10 provinces.",
+        demandLevel: "High Demand",
+        avgSalaryRangeZMW: "K16,000 - K42,000 / month",
+        fitExplanation: `Aligns with ${studentName}'s CBC Social Sciences & Humanities core. Essential for commercial law, constitutional guidance, mining rights, and human rights.`,
         eczRequirements: {
-          essentialSubjects: ["Science / Physics", "Mathematics", "English Language"],
-          minGradeTarget: "Credit 6 in Mathematics and Science",
-          preferredElectives: ["Design & Technology", "Computer Studies"]
+          essentialSubjects: ["English Language", "Civic Education", "History / Geography", "Mathematics"],
+          minGradeTarget: "Distinction 1-2 in English Language; Best 6 aggregate under 12 points for UNZA Law",
+          cbcKeyCompetencies: ["Legal Reasoning & Research", "Persuasive Advocacy", "Ethical Governance"],
+          preferredElectives: ["Literature in English", "Religious Education"]
         },
         tertiaryInstitutions: [
-          { name: "Northern Technical College (NORTEC)", program: "Diploma in Electrical Power & Renewable Energy", location: "Ndola", helsbEligible: true },
-          { name: "Evelyn Hone College", program: "Diploma in Electrical Engineering", location: "Lusaka", helsbEligible: true },
-          { name: "Copperbelt University (CBU)", program: "BSc Renewable Energy Systems", location: "Kitwe", helsbEligible: true }
+          { name: "University of Zambia (UNZA)", program: "Bachelor of Laws (LLB) - Great East Campus", location: "Lusaka", helsbEligible: true },
+          { name: "University of Lusaka (UNILUS)", program: "Bachelor of Laws (LLB)", location: "Lusaka", helsbEligible: false },
+          { name: "Mulungushi University", program: "Bachelor of Laws (LLB)", location: "Kabwe", helsbEligible: true }
         ],
         roadmapSteps: [
-          { stage: "Grade 10-12 (ECZ)", focus: "Gain strong grounding in electrical circuits, Ohm's law, and energy conservation." },
-          { stage: "TEVETA / Degree Studies", focus: "Master inverter installation, battery storage chemistry, and solar irradiance modeling." },
-          { stage: "Field Practical", focus: "Participate in solar farm installations with ZESCO, CEC, or off-grid solar providers." },
-          { stage: "Energy Licensing", focus: "Obtain Energy Regulation Board (ERB) and EIZ installation accreditations." }
+          { stage: "Form 3-4 (Senior O-Level)", focus: "Excel in English debate, civic law, and critical essay composition." },
+          { stage: "LLB Degree Admission", focus: "Gain admission to UNZA or UNILUS School of Law; apply for HELSB loan." },
+          { stage: "ZIALE Post-Graduate Bar", focus: "Complete Zambia Institute of Advanced Legal Education (ZIALE) bar examinations." },
+          { stage: "Admittance to Bar", focus: "Be admitted as an Advocate of the High Court of Zambia; join Law Association of Zambia (LAZ)." }
         ],
-        skillsToBuild: ["Solar Array Sizing & CAD", "Battery Inverter Synchronization", "High-Voltage Safety", "Energy Auditing"],
-        fundingOptions: ["CDF Skills Development Bursary", "Rural Electrification Authority Grants", "HELSB Student Loans"]
+        skillsToBuild: ["Contract Drafting", "Constitutional Law", "Courtroom Advocacy", "Alternative Dispute Resolution"],
+        fundingOptions: ["HELSB Student Loans", "Law Firm Trainee Sponsorships"]
       }
     ];
   }
 
-  const advice = `Welcome ${studentName}! Based on your ${secondaryStream} stream in ${province}, you have viable opportunities across both university degrees (UNZA/CBU/MU) and practical TEVETA diplomas (NORTEC/Evelyn Hone). Strive for Credit 6 or better in 5 ECZ subjects with special focus on Mathematics and English to qualify for Higher Education Loans & Scholarships Board (HELSB) funding or Constituency Development Fund (CDF) bursaries.`;
+  const advice = `Welcome ${studentName}! Under Zambia's new Competency-Based Curriculum (CBC 3-6-6-3), your performance in ${cbcPathway} sets the foundation for both Academic and Technical/Vocational progression. Complete your School-Based Assessment (SBA) practical projects thoroughly in Form 3-4, and maintain Credit 6 or better in all core subjects—especially English, Mathematics, and Civic Education—to qualify for Form 5-6 A-Levels, UNZA/CBU admissions, and HELSB/CDF bursary funding.`;
 
   const milestones = [
-    "Verify your Green National Registration Card (NRC) number",
-    "Calculate your estimated ECZ Cutoff Points using C.A.R.R.A Points Calculator",
-    "Review subject choices with your secondary school Guidance Counselor",
-    "Identify TEVETA or UNZA/CBU programs with matching prerequisites",
-    "Gather application documents for HELSB loans or local CDF council bursaries"
+    "Confirm your CBC Career Pathway (Form 1 - 2 transition)",
+    "Verify your Green National Registration Card (NRC) at your local boma",
+    "Submit your CBC School-Based Assessment (SBA) practical coursework portfolio",
+    "Calculate your estimated Form 4 ECZ O-Level points using C.A.R.R.A Points Calculator",
+    "Evaluate whether to pursue Form 5-6 A-Levels or direct entry into TEVETA Diplomas (CDF covered) or University (HELSB covered)"
   ];
 
   return {
@@ -302,27 +406,52 @@ export function generateClientRecommendations(params: RecommendParams): {
 export function generateClientChatResponse(message: string, _userContext?: any): string {
   const lower = message.toLowerCase();
 
+  if (lower.includes('cbc') || lower.includes('competency') || lower.includes('new curriculum') || lower.includes('3-6-6-3')) {
+    return "Zambia's new Competency-Based Curriculum (CBC) introduces a modern 3-6-6-3 educational model:\n\n" +
+      "1. Structural Changes:\n" +
+      "• Primary education ends at Grade 6 (instead of Grade 7).\n" +
+      "• Secondary education is 6 years, structured as Forms:\n" +
+      "  - Junior Secondary: Form 1 & Form 2 (career exploration & pathway selection)\n" +
+      "  - Senior Ordinary Level (O-Level): Form 3 & Form 4 (core national ECZ certification)\n" +
+      "  - Advanced Level (A-Level): Form 5 & Form 6 (reintroduced for direct university and international parity)\n\n" +
+      "2. Eight Specialized Career Pathways:\n" +
+      "• Natural Sciences (NS)\n" +
+      "• Technology & Computer Science (TECH)\n" +
+      "• Agricultural Sciences (AS)\n" +
+      "• Business, Commerce & Finance (BCF)\n" +
+      "• Social Sciences & Humanities (SS)\n" +
+      "• Home Economics, Hospitality & Tourism (HEH) — including new Travel & Tourism!\n" +
+      "• Performing & Creative Arts (PCA)\n" +
+      "• Physical Education & Sports Science (PES)\n\n" +
+      "3. Assessment:\n" +
+      "• Combines continuous School-Based Assessment (SBA practicals, projects, and portfolios) with national ECZ summative exams.";
+  }
+
+  if (lower.includes('a-level') || lower.includes('form 5') || lower.includes('form 6')) {
+    return "The reintroduction of Advanced Level (A-Level / Form 5-6) under Zambia's CBC offers major benefits:\n\n" +
+      "• Purpose: 2-year rigorous specialization after Form 4 O-Levels to prepare students for direct university entry.\n" +
+      "• Pathways: A-Levels are offered across Natural Sciences (Physics, Chemistry, Maths, Bio), Technology, Business/Finance, and Social Sciences.\n" +
+      "• University Entry: Form 6 A-Level graduates gain direct admission and course exemptions at UNZA, CBU, and international universities, bypassing the general foundation year!";
+  }
+
   if (lower.includes('point') || lower.includes('best 6') || lower.includes('cutoff')) {
-    return "In Zambia, tertiary admission to public universities like UNZA, CBU, Mulungushi, and LMMU is calculated on your Best 6 subjects aggregate score.\n\n• Grades range from Distinction (1-2), Merit (3-4), Credit (5-6), Pass (7-8) to Unsatisfactory (9).\n• Lower numbers represent higher academic merit (6 points is the theoretical maximum with six 1s).\n• Typical cutoffs: Medicine (UNZA/LMMU): 6 - 10 points; Engineering & Mines (CBU/UNZA): 6 - 14 points; Humanities, Law & Business: 10 - 18 points.\n• You can use our built-in ECZ Points Calculator tab to test your subjects and view instant viability!";
+    return "In Zambia, tertiary admission under ECZ evaluates candidates on their Best 6 subjects aggregate score:\n\n" +
+      "• Grades range from Distinction (1-2), Merit (3-4), Credit (5-6), Pass (7-8) to Unsatisfactory (9).\n" +
+      "• Lower numbers are better (6 points is top aggregate with six 1s).\n" +
+      "• Core CBC compulsory subjects (English Language, Mathematics, Civic Education, and pathway subjects) are given priority.\n" +
+      "• Cutoff benchmarks: Medicine (UNZA/LMMU): 6 - 10 points; Engineering & Mines (CBU/UNZA): 6 - 14 points; Business/Law: 10 - 18 points; TEVETA Diplomas: 5 credits.\n" +
+      "• Use our built-in ECZ Points Calculator tab to test both O-Level points and A-Level scores!";
   }
 
   if (lower.includes('cdf') || lower.includes('constituency') || lower.includes('bursary')) {
-    return "The Constituency Development Fund (CDF) Skills Development Bursary is a game-changer in Zambia!\n\n• Who qualifies: Zambian citizens (youth & school leavers) with an NRC, accepted or applying to an accredited TEVETA institution (e.g. Evelyn Hone, NORTEC, NRDC, trades training institutes).\n• What it covers: Up to 100% tuition fees, toolkits, and examination fees.\n• How to apply: Collect CDF Bursary application forms from your local Civic Center / Council Office or Ward Development Committee (WDC). Applications are reviewed by the CDF Committee.\n• Tip: You can generate a personalized CDF Application Letter directly in our HELSB & CV Builder tab!";
+    return "The Constituency Development Fund (CDF) Skills Development Bursary is ideal for CBC Technical & Vocational pathways:\n\n" +
+      "• Who qualifies: Zambian school leavers and youth holding an NRC.\n" +
+      "• Coverage: Up to 100% tuition, toolkits, and exam fees at TEVETA-accredited institutions (Evelyn Hone, NORTEC, NRDC, trades training institutes).\n" +
+      "• Application: Submit CDF forms through your local Ward Development Committee (WDC) or Civic Center.\n" +
+      "• You can generate your tailored CDF Application Letter right now in our HELSB & CV Builder tab!";
   }
 
-  if (lower.includes('helsb') || lower.includes('student loan') || lower.includes('loan')) {
-    return "The Higher Education Loans and Scholarships Board (HELSB) provides student loans for accredited public universities:\n\n• Eligible Universities: UNZA, CBU, Mulungushi University, Mukuba University, Kwame Nkrumah, Chalimbana, and Kapasa Makasa.\n• Tier criteria: Priority is given to high-demand STEM fields (Engineering, Mining, Medicine, Agriculture, IT) with Best 6 points under 14.\n• Requirements: Formal University Admission Letter, Green NRC, ECZ Grade 12 Statement of Results, and parent/guardian verification.\n• Timeline: HELSB opens loan applications shortly after university admission lists are published (typically March - June).";
-  }
-
-  if (lower.includes('unza') || lower.includes('cbu')) {
-    return "UNZA vs CBU:\n\n• University of Zambia (UNZA - Lusaka): Renowned for Natural Sciences, Medicine (Ridgeway Campus / UTH), Law, Agriculture, and Humanities.\n• Copperbelt University (CBU - Kitwe & Ndola): Zambia's technological powerhouse for Mining Engineering, Metallurgy, Chemical Engineering, Computer Engineering, Architecture, and Forestry.\n• Both require at least 5 Credits (Grades 1 to 6) including English Language and Mathematics for STEM and business degrees.";
-  }
-
-  if (lower.includes('teveta') || lower.includes('diploma') || lower.includes('trade')) {
-    return "TEVETA pathways in Zambia provide high-employability technical qualifications:\n\n• Key Colleges: Northern Technical College (NORTEC - Heavy Equipment & Electrical in Ndola), Evelyn Hone College (Pharmacy Tech, Journalism, Art, IT in Lusaka), NRDC (Agribusiness & Agricultural Engineering).\n• Advantage: Hands-on skills in high demand by employers, shorter duration (2-3 years), and eligible for 100% CDF Bursary coverage!\n• You can seamlessly upgrade from a TEVETA Diploma to a University Bachelor's degree through exemption credits.";
-  }
-
-  return "Thank you for reaching out! To excel in Zambia's education and career landscape, ensure you target Credit 6 or better in at least 5 ECZ subjects—crucially English Language and Mathematics. Whether you aim for UNZA, CBU, or TEVETA colleges like Evelyn Hone and NORTEC, there are strong pathways supported by HELSB loans and CDF bursaries. What specific field or subject combination would you like to explore?";
+  return "Greetings from C.A.R.R.A! I am fully synchronized with Zambia's new Competency-Based Curriculum (CBC 3-6-6-3). Whether you are choosing your Form 3 pathway, preparing your Form 4 School-Based Assessment (SBA), planning for Form 5-6 A-Levels, or applying for UNZA, CBU, or TEVETA colleges with HELSB/CDF funding, ask me anything!";
 }
 
 export function generateClientCoverLetter(params: {
@@ -349,23 +478,23 @@ Lusaka, Zambia
 
 Dear Sir/Madam,
 
-RE: APPLICATION FOR ${letterType.replace(/_/g, ' ').toUpperCase()} - ${programOrRole.toUpperCase()}
+RE: APPLICATION FOR ${letterType.replace(/_/g, ' ').toUpperCase()} - ${programOrRole.toUpperCase()} (ZAMBIA CBC FRAMEWORK)
 
-I am writing to express my earnest application for ${programOrRole} with ${targetEntity}. As a dedicated Zambian learner at ${schoolOrCollege}, I have consistently prioritized academic discipline, technical competence, and community contribution.
+I am writing to express my earnest application for ${programOrRole} with ${targetEntity}. Having progressed through Zambia's revised Competency-Based Curriculum (CBC) framework at ${schoolOrCollege}, I have gained both strong theoretical knowledge and rigorous hands-on practical competence.
 
-Academic Achievements:
-${academicHighlights || 'Successfully completed secondary school studies with strong ECZ examination credits in Mathematics, Sciences, and core subjects.'}
+Academic & Competency Profile:
+${academicHighlights || 'Successfully completed secondary school studies with strong ECZ examination credits and School-Based Assessment (SBA) practical coursework across core Mathematics, Sciences, and specialized pathway subjects.'}
 
-Core Strengths & Aptitudes:
-${strengths || 'Analytical problem solving, reliability, leadership, and a commitment to technical craftsmanship.'}
+Core Competencies & Aptitudes:
+${strengths || 'Demonstrated competence in critical thinking, practical problem solving, digital systems literacy, and community teamwork.'}
 
 National Development Aspiration:
-My goal is to contribute actively to Zambia's national development agenda (Vision 2030 and 8NDP) by ${careerGoals || 'advancing skills that strengthen our local industries and economy'}. Securing this opportunity will equip me with the critical expertise to deliver meaningful value.
+In alignment with Zambia's Vision 2030 and Eighth National Development Plan (8NDP), my aspiration is to contribute meaningfully to national industrial diversification and social welfare through ${careerGoals || 'excellence and integrity in my chosen discipline'}.
 
-Thank you for reviewing my application. I look forward to the privilege of presenting my qualifications further.
+Thank you for your favorable consideration. I welcome the opportunity to present my credentials and practical portfolio in an interview.
 
 Yours faithfully,
 
 ${fullName || 'Applicant'}
-NRC & Contact Details Attached`;
+Green National Registration Card (NRC) & Academic Transcripts Attached`;
 }

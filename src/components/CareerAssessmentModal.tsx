@@ -11,16 +11,18 @@ import {
   DollarSign, 
   AlertCircle,
   Plus,
-  Trash2
+  Trash2,
+  Award
 } from 'lucide-react';
 import { 
-  GradeLevel, 
-  SecondaryStream, 
+  CBCGradeLevel, 
+  CBCPathway, 
+  CBCPathwayType,
   ZambianProvince, 
   ECZSubjectGrade, 
   CareerRecommendation 
 } from '../types';
-import { ZAMBIAN_PROVINCES, ECZ_COMMON_SUBJECTS } from '../data/zambianData';
+import { ZAMBIAN_PROVINCES, CBC_COMMON_SUBJECTS, CBC_PATHWAYS } from '../data/zambianData';
 import { getCareerRecommendations } from '../services/apiService';
 
 interface CareerAssessmentModalProps {
@@ -44,55 +46,105 @@ export const CareerAssessmentModal: React.FC<CareerAssessmentModalProps> = ({
 
   // Form State
   const [fullName, setFullName] = useState<string>('Nchimunya Tembo');
-  const [gradeLevel, setGradeLevel] = useState<GradeLevel>('Grade 12');
+  const [gradeLevel, setGradeLevel] = useState<CBCGradeLevel>('Form 4 (Senior O-Level Completion - CBC)');
   const [province, setProvince] = useState<ZambianProvince>('Copperbelt');
   const [schoolName, setSchoolName] = useState<string>('David Kaunda STEM High School');
-  const [secondaryStream, setSecondaryStream] = useState<SecondaryStream>('Pure Sciences (STEM)');
+  const [cbcPathway, setCbcPathway] = useState<CBCPathway>('Natural Sciences (NS)');
+  const [pathwayType, setPathwayType] = useState<CBCPathwayType>('Academic Career Pathway');
   
-  // ECZ Subjects & Grades (1 to 9)
+  // ECZ / CBC Subjects & Grades (1 to 9)
   const [eczGrades, setEczGrades] = useState<ECZSubjectGrade[]>([
-    { subject: 'Mathematics', grade: 2 },
-    { subject: 'English Language', grade: 2 },
+    { subject: 'English Language', grade: 2, isCbcCore: true },
+    { subject: 'Mathematics', grade: 2, isCbcCore: true },
+    { subject: 'Civic Education', grade: 2, isCbcCore: true },
+    { subject: 'Information & Communication Technology (ICT)', grade: 1, isCbcCore: true },
     { subject: 'Pure Physics', grade: 2 },
     { subject: 'Pure Chemistry', grade: 3 },
     { subject: 'Biology', grade: 2 },
-    { subject: 'Computer Studies', grade: 1 },
+  ]);
+
+  // CBC Core Competencies
+  const [selectedCompetencies, setSelectedCompetencies] = useState<string[]>([
+    'Critical Thinking & Problem Solving',
+    'Digital Literacy & Computing',
+    'Scientific Inquiry & Analysis'
   ]);
 
   // Interests
   const [selectedInterests, setSelectedInterests] = useState<string[]>([
     'Robotics & Software Automation',
     'Mining & Engineering Innovations',
-    'Hands-on problem solving'
-  ]);
-
-  // Strengths
-  const [selectedStrengths, setSelectedStrengths] = useState<string[]>([
-    'Analytical & logical thinking',
-    'Mathematics & formulas',
-    'Attention to detail'
+    'Hands-on practical experiments'
   ]);
 
   // Career aspirations & practical preferences
   const [workPreference, setWorkPreference] = useState<string>('Technical problem-solving and field engineering');
   const [financialNeed, setFinancialNeed] = useState<boolean>(true);
-  const [preferredInstitutions, setPreferredInstitutions] = useState<string[]>([
-    'Copperbelt University (CBU)',
-    'University of Zambia (UNZA)',
-    'Northern Technical College (NORTEC)'
-  ]);
 
   if (!isOpen) return null;
+
+  const handlePathwaySelect = (pathway: CBCPathway, type: CBCPathwayType) => {
+    setCbcPathway(pathway);
+    setPathwayType(type);
+
+    // Adjust default subjects to match CBC pathway requirements
+    if (pathway === 'Technology & Computer Science (TECH)') {
+      setEczGrades([
+        { subject: 'English Language', grade: 2, isCbcCore: true },
+        { subject: 'Mathematics', grade: 2, isCbcCore: true },
+        { subject: 'Civic Education', grade: 3, isCbcCore: true },
+        { subject: 'Computer Science (Practical)', grade: 1 },
+        { subject: 'Design and Technology', grade: 2 },
+        { subject: 'Pure Physics', grade: 3 },
+      ]);
+    } else if (pathway === 'Agricultural Sciences (AS)') {
+      setEczGrades([
+        { subject: 'English Language', grade: 2, isCbcCore: true },
+        { subject: 'Mathematics', grade: 2, isCbcCore: true },
+        { subject: 'Civic Education', grade: 3, isCbcCore: true },
+        { subject: 'Agricultural Science (Core)', grade: 1 },
+        { subject: 'Biology', grade: 2 },
+        { subject: 'Pure Chemistry', grade: 3 },
+      ]);
+    } else if (pathway === 'Home Economics, Hospitality & Tourism (HEH)') {
+      setEczGrades([
+        { subject: 'English Language', grade: 2, isCbcCore: true },
+        { subject: 'Mathematics', grade: 3, isCbcCore: true },
+        { subject: 'Civic Education', grade: 2, isCbcCore: true },
+        { subject: 'Travel and Tourism (New CBC)', grade: 1 },
+        { subject: 'Food and Nutrition', grade: 2 },
+        { subject: 'Information & Communication Technology (ICT)', grade: 2, isCbcCore: true },
+      ]);
+    } else if (pathway === 'Business, Commerce & Finance (BCF)') {
+      setEczGrades([
+        { subject: 'English Language', grade: 2, isCbcCore: true },
+        { subject: 'Mathematics', grade: 2, isCbcCore: true },
+        { subject: 'Civic Education', grade: 3, isCbcCore: true },
+        { subject: 'Principles of Accounts', grade: 1 },
+        { subject: 'Commerce', grade: 2 },
+        { subject: 'Economics', grade: 3 },
+      ]);
+    } else {
+      setEczGrades([
+        { subject: 'English Language', grade: 2, isCbcCore: true },
+        { subject: 'Mathematics', grade: 2, isCbcCore: true },
+        { subject: 'Civic Education', grade: 2, isCbcCore: true },
+        { subject: 'Pure Physics', grade: 2 },
+        { subject: 'Pure Chemistry', grade: 3 },
+        { subject: 'Biology', grade: 2 },
+      ]);
+    }
+  };
+
+  const toggleCompetency = (comp: string) => {
+    setSelectedCompetencies(prev => 
+      prev.includes(comp) ? prev.filter(c => c !== comp) : [...prev, comp]
+    );
+  };
 
   const toggleInterest = (interest: string) => {
     setSelectedInterests(prev => 
       prev.includes(interest) ? prev.filter(i => i !== interest) : [...prev, interest]
-    );
-  };
-
-  const toggleStrength = (strength: string) => {
-    setSelectedStrengths(prev => 
-      prev.includes(strength) ? prev.filter(s => s !== strength) : [...prev, strength]
     );
   };
 
@@ -110,15 +162,14 @@ export const CareerAssessmentModal: React.FC<CareerAssessmentModalProps> = ({
 
   const addSubjectRow = () => {
     if (eczGrades.length >= 9) return;
-    setEczGrades(prev => [...prev, { subject: 'Civic Education', grade: 4 }]);
+    setEczGrades(prev => [...prev, { subject: 'Geography', grade: 4 }]);
   };
 
   const removeSubjectRow = (index: number) => {
-    if (eczGrades.length <= 3) return;
+    if (eczGrades.length <= 4) return;
     setEczGrades(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Submit via resilient apiService (works seamlessly on GitHub Pages static & full-stack server)
   const handleGenerateRecommendations = async () => {
     setLoading(true);
     setErrorMessage(null);
@@ -127,15 +178,18 @@ export const CareerAssessmentModal: React.FC<CareerAssessmentModalProps> = ({
       const payload = {
         studentName: fullName,
         gradeLevel,
-        secondaryStream,
+        secondaryStream: cbcPathway,
+        cbcPathway,
+        pathwayType,
         favoriteSubjects: eczGrades.map(g => g.subject),
         eczGrades: eczGrades.reduce((acc, curr) => ({ ...acc, [curr.subject]: curr.grade }), {}),
+        coreCompetencies: selectedCompetencies,
         interests: selectedInterests,
-        personalStrengths: selectedStrengths.join(', '),
+        personalStrengths: selectedCompetencies.join(', '),
         workPreferences: workPreference,
         financialNeed,
         province,
-        targetSector: 'High-priority Zambian industrial & social development',
+        targetSector: 'Zambia CBC Priority Industries',
       };
 
       const data = await getCareerRecommendations(payload);
@@ -164,13 +218,18 @@ export const CareerAssessmentModal: React.FC<CareerAssessmentModalProps> = ({
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold tracking-tight">C.A.R.R.A AI Career Discovery</h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-bold tracking-tight">C.A.R.R.A CBC Career Discovery</h2>
+                <span className="px-2 py-0.5 rounded text-[10px] font-extrabold bg-amber-400 text-slate-950 uppercase">
+                  CBC 3-6-6-3 Aligned
+                </span>
+              </div>
               <p className="text-xs text-emerald-200">
                 Step {step} of 4: {
-                  step === 1 ? 'Student Identity & Location' :
-                  step === 2 ? 'ECZ Curriculum & Grades' :
-                  step === 3 ? 'Interests & Personal Strengths' :
-                  'Aspirations & Financial Aid (HELSB/CDF)'
+                  step === 1 ? 'Learner Level & CBC Pathway (Forms 1-6)' :
+                  step === 2 ? 'CBC Core & Pathway Subjects (SBA + ECZ)' :
+                  step === 3 ? 'Core CBC Competencies & Interests' :
+                  'Post-Secondary Ambitions & Bursary Support'
                 }
               </p>
             </div>
@@ -194,11 +253,11 @@ export const CareerAssessmentModal: React.FC<CareerAssessmentModalProps> = ({
         {/* Body content */}
         <div className="p-6 overflow-y-auto flex-1 space-y-6">
           
-          {/* STEP 1: Student Identity & Location */}
+          {/* STEP 1: Student Identity & CBC Pathway */}
           {step === 1 && (
             <div className="space-y-4">
               <div className="p-3.5 bg-emerald-50/70 border border-emerald-200/60 rounded-xl text-xs text-emerald-900 leading-relaxed">
-                👋 <strong>Mwaiseni!</strong> Tell us about your school background. C.A.R.R.A uses this to evaluate local university prerequisites and regional opportunities across Zambia.
+                🇿🇲 <strong>Zambia Competency-Based Curriculum (CBC 3-6-6-3):</strong> Primary ends at Grade 6; Secondary spans Form 1 to Form 6 (Form 1-2 Junior Secondary, Form 3-4 Senior O-Level, Form 5-6 Advanced A-Level). Select your level and chosen CBC career pathway below.
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -214,19 +273,21 @@ export const CareerAssessmentModal: React.FC<CareerAssessmentModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Current Academic Level</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">CBC Academic Level</label>
                   <select
                     value={gradeLevel}
-                    onChange={(e) => setGradeLevel(e.target.value as GradeLevel)}
+                    onChange={(e) => setGradeLevel(e.target.value as CBCGradeLevel)}
                     className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
                   >
-                    <option value="Grade 9">Grade 9 (Junior Secondary)</option>
-                    <option value="Grade 10">Grade 10 (Senior Secondary Entry)</option>
-                    <option value="Grade 11">Grade 11</option>
-                    <option value="Grade 12">Grade 12 (ECZ Candidate)</option>
-                    <option value="School Leaver">Grade 12 School Leaver (Waiting for Results / Admissions)</option>
-                    <option value="TEVETA Student">TEVETA Trainee / College Student</option>
-                    <option value="University Fresher">University Fresher (Year 1)</option>
+                    <option value="Form 1 (Junior Secondary - CBC)">Form 1 (Junior Secondary - CBC)</option>
+                    <option value="Form 2 (Junior Secondary - CBC)">Form 2 (Junior Secondary - CBC Pathway Selection)</option>
+                    <option value="Form 3 (Senior O-Level - CBC)">Form 3 (Senior O-Level - CBC Specialization)</option>
+                    <option value="Form 4 (Senior O-Level Completion - CBC)">Form 4 (Senior O-Level ECZ Candidate)</option>
+                    <option value="Form 5 (Advanced A-Level - CBC)">Form 5 (Advanced Level - A-Level Year 1)</option>
+                    <option value="Form 6 (Advanced A-Level Graduation - CBC)">Form 6 (Advanced Level - A-Level Graduation)</option>
+                    <option value="Grade 10-12 (Traditional ECZ Transition)">Grade 10-12 (Traditional ECZ Transition)</option>
+                    <option value="School Leaver / Pre-University">School Leaver / Pre-University</option>
+                    <option value="TEVETA College Trainee">TEVETA Trainee / College Student</option>
                   </select>
                 </div>
 
@@ -244,76 +305,84 @@ export const CareerAssessmentModal: React.FC<CareerAssessmentModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">School / College Name</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">School / Secondary Center</label>
                   <input
                     type="text"
                     value={schoolName}
                     onChange={(e) => setSchoolName(e.target.value)}
-                    placeholder="e.g. Hillcrest Technical, David Kaunda, Kabulonga Boys"
+                    placeholder="e.g. David Kaunda STEM, Ndola Girls, Hillcrest"
                     className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
                 </div>
               </div>
 
+              {/* 8 CBC Pathways */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Secondary School Stream</label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                  {[
-                    'Pure Sciences (STEM)',
-                    'Commercials & Business Studies',
-                    'Technicals & Vocational (TVET)',
-                    'Humanities, Social Sciences & Arts',
-                    'Agricultural Sciences'
-                  ].map((streamOption) => (
-                    <button
-                      key={streamOption}
-                      type="button"
-                      onClick={() => setSecondaryStream(streamOption as SecondaryStream)}
-                      className={`text-left p-3 rounded-xl border transition-all cursor-pointer ${
-                        secondaryStream === streamOption
-                          ? 'border-emerald-600 bg-emerald-50/80 text-emerald-900 font-semibold shadow-xs'
-                          : 'border-slate-200 text-slate-700 hover:border-slate-300'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span>{streamOption}</span>
-                        {secondaryStream === streamOption && (
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                        )}
-                      </div>
-                    </button>
-                  ))}
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
+                  Select Your CBC Senior Career Pathway (Form 3-6)
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                  {CBC_PATHWAYS.map((p) => {
+                    const isSelected = cbcPathway === p.id;
+                    return (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => handlePathwaySelect(p.id, p.type)}
+                        className={`text-left p-3 rounded-xl border transition-all cursor-pointer ${
+                          isSelected
+                            ? 'border-emerald-600 bg-emerald-50/80 text-emerald-950 font-semibold shadow-xs ring-1 ring-emerald-500/40'
+                            : 'border-slate-200 text-slate-700 hover:border-slate-300 bg-white'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-1 mb-1">
+                          <span className="font-bold text-slate-900">{p.name}</span>
+                          <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold shrink-0 ${
+                            p.type === 'Academic Career Pathway' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-900'
+                          }`}>
+                            {p.type === 'Academic Career Pathway' ? 'Academic' : 'TVET'}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
+                          {p.description}
+                        </p>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
           )}
 
-          {/* STEP 2: ECZ Academic Subjects & Grades */}
+          {/* STEP 2: CBC Academic Subjects & Grades */}
           {step === 2 && (
             <div className="space-y-4">
-              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900">
-                <strong>ECZ Grading System:</strong> 1-2 (Distinction), 3-4 (Merit), 5-6 (Credit), 7-8 (Pass), 9 (Unsatisfactory). 
-                University admission (UNZA/CBU) requires 5 Credits (grades 1 to 6) including English & Mathematics. Enter your current or target grades.
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 leading-relaxed">
+                <strong>CBC Core + Pathway Assessment:</strong> In Zambia’s CBC, <em>English Language, Mathematics, Civic Education, and ICT/Computer Science</em> form the compulsory core across all pathways. School-Based Assessment (SBA practicals/portfolios) combines with ECZ exams for final certification.
               </div>
 
               <div className="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-200">
                 <div className="bg-slate-50 px-4 py-2 flex items-center justify-between text-xs font-semibold text-slate-600">
-                  <span className="w-7/12">ECZ Subject</span>
-                  <span className="w-4/12 text-center">Grade (1 = Best)</span>
+                  <span className="w-7/12">CBC Subject</span>
+                  <span className="w-4/12 text-center">Grade (1 = Distinction)</span>
                   <span className="w-1/12 text-right"></span>
                 </div>
 
                 {eczGrades.map((item, idx) => (
                   <div key={idx} className="px-4 py-2.5 flex items-center justify-between gap-3 text-xs">
-                    <select
-                      value={item.subject}
-                      onChange={(e) => handleSubjectChange(idx, e.target.value)}
-                      className="w-7/12 py-1.5 px-2 border border-slate-200 rounded-md font-medium text-slate-800 bg-white"
-                    >
-                      {ECZ_COMMON_SUBJECTS.map((sub) => (
-                        <option key={sub.name} value={sub.name}>{sub.name}</option>
-                      ))}
-                    </select>
+                    <div className="w-7/12 flex items-center gap-1.5">
+                      <select
+                        value={item.subject}
+                        onChange={(e) => handleSubjectChange(idx, e.target.value)}
+                        className="w-full py-1.5 px-2 border border-slate-200 rounded-md font-medium text-slate-800 bg-white"
+                      >
+                        {CBC_COMMON_SUBJECTS.map((sub) => (
+                          <option key={sub.name} value={sub.name}>
+                            {sub.name} {sub.isCore ? '(CBC Core)' : ''}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
                     <div className="w-4/12 flex items-center justify-center space-x-1">
                       <select
@@ -359,14 +428,52 @@ export const CareerAssessmentModal: React.FC<CareerAssessmentModalProps> = ({
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-800 cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
-                <span>Add Another ECZ Subject</span>
+                <span>Add Another CBC Subject</span>
               </button>
             </div>
           )}
 
-          {/* STEP 3: Interests & Passions */}
+          {/* STEP 3: Core CBC Competencies & Interests */}
           {step === 3 && (
-            <div className="space-y-4">
+            <div className="space-y-5">
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
+                  CBC Core Competencies (Self-Assessment)
+                </label>
+                <p className="text-[11px] text-slate-500 mb-2.5">
+                  The new curriculum evaluates practical competence alongside knowledge. Select your top 2-3 competencies:
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  {[
+                    'Critical Thinking & Problem Solving',
+                    'Digital Literacy & Computing',
+                    'Innovation & Entrepreneurship',
+                    'Scientific Inquiry & Analysis',
+                    'Communication & Collaboration',
+                    'Technical & Vocational Craftsmanship',
+                    'Environmental & Agricultural Stewardship',
+                    'Ethical Civic Responsibility'
+                  ].map((comp) => {
+                    const isSelected = selectedCompetencies.includes(comp);
+                    return (
+                      <button
+                        key={comp}
+                        type="button"
+                        onClick={() => toggleCompetency(comp)}
+                        className={`text-left p-2.5 rounded-lg border transition-all cursor-pointer flex items-center justify-between ${
+                          isSelected
+                            ? 'bg-emerald-50 border-emerald-600 text-emerald-950 font-semibold'
+                            : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
+                        }`}
+                      >
+                        <span>{comp}</span>
+                        {isSelected && <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               <div>
                 <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
                   What activities excite you most? (Select 2-4)
@@ -378,7 +485,7 @@ export const CareerAssessmentModal: React.FC<CareerAssessmentModalProps> = ({
                     'Commercial Farming & Agribusiness',
                     'Healthcare, Nursing & Saving Lives',
                     'Accounting, Banking & Investment',
-                    'Building, Civil Works & Architecture',
+                    'Eco-Tourism, Safari Lodges & Hospitality',
                     'Renewable Solar & Electrical Energy',
                     'Law, Human Rights & Policy',
                     'Hands-on Mechanical Repairs & Trades',
@@ -392,46 +499,11 @@ export const CareerAssessmentModal: React.FC<CareerAssessmentModalProps> = ({
                         onClick={() => toggleInterest(item)}
                         className={`text-left p-2.5 rounded-lg border transition-all cursor-pointer flex items-center justify-between ${
                           isSelected
-                            ? 'bg-emerald-50 border-emerald-600 text-emerald-900 font-medium'
+                            ? 'bg-amber-50 border-amber-600 text-amber-950 font-semibold'
                             : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
                         }`}
                       >
                         <span>{item}</span>
-                        {isSelected && <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
-                  What are your greatest natural strengths?
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                  {[
-                    'Analytical & logical thinking',
-                    'Mathematics & formulas',
-                    'Hands-on fixing & tool usage',
-                    'Clear communication & writing',
-                    'Empathy & supporting others',
-                    'Leadership & organizing teams',
-                    'Attention to detail',
-                    'Creativity & visual aesthetics'
-                  ].map((str) => {
-                    const isSelected = selectedStrengths.includes(str);
-                    return (
-                      <button
-                        key={str}
-                        type="button"
-                        onClick={() => toggleStrength(str)}
-                        className={`text-left p-2.5 rounded-lg border transition-all cursor-pointer flex items-center justify-between ${
-                          isSelected
-                            ? 'bg-amber-50 border-amber-600 text-amber-950 font-medium'
-                            : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
-                        }`}
-                      >
-                        <span>{str}</span>
                         {isSelected && <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0" />}
                       </button>
                     );
@@ -446,7 +518,7 @@ export const CareerAssessmentModal: React.FC<CareerAssessmentModalProps> = ({
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Ideal Work Style & Environment
+                  Ideal Work Style & Setting in Zambia
                 </label>
                 <select
                   value={workPreference}
@@ -456,6 +528,7 @@ export const CareerAssessmentModal: React.FC<CareerAssessmentModalProps> = ({
                   <option value="Technical problem-solving and field engineering">Field & Operations (Mining, Plants, Agribusiness estates)</option>
                   <option value="Modern tech hub, fintech or corporate office">Modern Corporate / Fintech / IT Office</option>
                   <option value="Healthcare clinic, hospital or medical lab">Hospital, Health Center or Laboratory</option>
+                  <option value="Eco-tourism safari lodge or hospitality resort">Safari Lodge, Hotel or Eco-Tourism Conservation Area</option>
                   <option value="Hands-on workshop, fabrication or skilled trades">Workshop, TVET Center or Electrical Installation</option>
                   <option value="Legal chambers, government civic policy or schools">Classrooms, Legal Chambers or Public Sector</option>
                 </select>
@@ -533,12 +606,12 @@ export const CareerAssessmentModal: React.FC<CareerAssessmentModalProps> = ({
               {loading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Analyzing ECZ & Career Pathways...</span>
+                  <span>Synthesizing CBC Pathways...</span>
                 </>
               ) : (
                 <>
                   <Sparkles className="w-4 h-4 text-amber-300" />
-                  <span>Generate C.A.R.R.A Pathways</span>
+                  <span>Generate C.A.R.R.A CBC Pathways</span>
                 </>
               )}
             </button>

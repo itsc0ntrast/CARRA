@@ -42,12 +42,12 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenA
             <div>
               <div className="flex items-center space-x-2">
                 <span className="font-extrabold text-xl sm:text-2xl text-slate-900 tracking-tight">C.A.R.R.A</span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                  🇿🇲 Zambia Edition
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  🇿🇲 Zambia CBC 3-6-6-3
                 </span>
               </div>
               <p className="text-[11px] text-slate-700 hidden sm:block font-medium">
-                Career Artificial Recommendation & Research Assistant
+                Career Artificial Recommendation & Research Assistant • Competency-Based Curriculum
               </p>
             </div>
           </div>

@@ -191,6 +191,16 @@ export const DiscoverySection: React.FC<DiscoverySectionProps> = ({
                     <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
                       {activeCareer.field}
                     </span>
+                    {activeCareer.cbcPathway && (
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-800 border border-indigo-200">
+                        CBC: {activeCareer.cbcPathway}
+                      </span>
+                    )}
+                    {activeCareer.pathwayType && (
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-800 border border-purple-200">
+                        {activeCareer.pathwayType}
+                      </span>
+                    )}
                     <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-200 flex items-center gap-1">
                       <TrendingUp className="w-3 h-3 text-amber-600" />
                       <span>{activeCareer.demandLevel} in Zambia ({activeCareer.zambiaDemandScore}%)</span>
@@ -375,6 +385,21 @@ export const DiscoverySection: React.FC<DiscoverySectionProps> = ({
                       ))}
                     </div>
                   </div>
+
+                  {activeCareer.eczRequirements.cbcKeyCompetencies && activeCareer.eczRequirements.cbcKeyCompetencies.length > 0 && (
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                        Target CBC Core Competencies (SBA Demonstration):
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {activeCareer.eczRequirements.cbcKeyCompetencies.map((comp, i) => (
+                          <span key={i} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-900 border border-indigo-200">
+                            ★ {comp}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   {activeCareer.eczRequirements.preferredElectives.length > 0 && (
                     <div>
