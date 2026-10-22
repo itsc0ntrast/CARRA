@@ -21,6 +21,7 @@ import {
   CareerRecommendation 
 } from '../types';
 import { ZAMBIAN_PROVINCES, ECZ_COMMON_SUBJECTS } from '../data/zambianData';
+import { getCareerRecommendations } from '../services/apiService';
 
 interface CareerAssessmentModalProps {
   isOpen: boolean;
@@ -117,7 +118,7 @@ export const CareerAssessmentModal: React.FC<CareerAssessmentModalProps> = ({
     setEczGrades(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Submit to Server Gemini Endpoint
+  // Submit via resilient apiService (works seamlessly on GitHub Pages static & full-stack server)
   const handleGenerateRecommendations = async () => {
     setLoading(true);
     setErrorMessage(null);
@@ -137,17 +138,7 @@ export const CareerAssessmentModal: React.FC<CareerAssessmentModalProps> = ({
         targetSector: 'High-priority Zambian industrial & social development',
       };
 
-      const res = await fetch('/api/carra/recommend', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        throw new Error(`Server returned ${res.status}`);
-      }
-
-      const data = await res.json();
+      const data = await getCareerRecommendations(payload);
       onRecommendationsGenerated({
         recommendations: data.recommendations || [],
         advice: data.overallCounselorAdvice || '',

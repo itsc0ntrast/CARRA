@@ -11,6 +11,7 @@ import {
   GraduationCap,
   Briefcase
 } from 'lucide-react';
+import { generateCoverLetter } from '../services/apiService';
 
 export const ApplicationBuilder: React.FC = () => {
   const [letterType, setLetterType] = useState<string>('HELSB_BURSARY');
@@ -47,23 +48,18 @@ export const ApplicationBuilder: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/carra/cover-letter', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          letterType,
-          fullName,
-          schoolOrCollege,
-          programOrRole,
-          targetEntity,
-          strengths,
-          academicHighlights,
-          careerGoals,
-        }),
+      const letter = await generateCoverLetter({
+        letterType,
+        fullName,
+        schoolOrCollege,
+        programOrRole,
+        targetEntity,
+        strengths,
+        academicHighlights,
+        careerGoals,
       });
 
-      const data = await res.json();
-      setGeneratedLetter(data.letter || '');
+      setGeneratedLetter(letter || '');
     } catch (err) {
       console.error('Error generating letter:', err);
     } finally {

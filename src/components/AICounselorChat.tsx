@@ -12,6 +12,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { StudentProfile } from '../types';
+import { sendChatMessage } from '../services/apiService';
 
 interface Message {
   id: string;
@@ -77,20 +78,15 @@ export const AICounselorChat: React.FC<AICounselorChatProps> = ({
     setLoading(true);
 
     try {
-      const res = await fetch('/api/carra/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [...messages, userMsg],
-          userContext: studentContext,
-        }),
-      });
+      const reply = await sendChatMessage(
+        [...messages, userMsg],
+        studentContext
+      );
 
-      const data = await res.json();
       const assistantMsg: Message = {
         id: `assistant-${Date.now()}`,
         sender: 'assistant',
-        text: data.reply || "I am processing your query. Please ask again.",
+        text: reply || "I am here to guide your career journey in Zambia. What question can I answer for you?",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
 
