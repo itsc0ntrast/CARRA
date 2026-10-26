@@ -1,0 +1,6 @@
+{
+  "name": "CARRA - Career Guidance for Zambia",
+  "description": "AI-assisted career discovery, subject pathways, and student development platform for secondary school students in Zambia.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

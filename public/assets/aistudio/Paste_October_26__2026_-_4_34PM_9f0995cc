@@ -1,0 +1,1569 @@
+# CARRA — MASTER APPLICATION GENERATION PROMPT
+## AI-Powered Career Guidance, Discovery and Student Development Platform for Zambia
+
+### 1. YOUR ROLE AND MISSION
+
+Act as a senior full-stack software engineer, product architect, UI/UX designer, database engineer, AI integration specialist, accessibility specialist, software tester, and deployment engineer.
+
+Your task is to design and implement CARRA, a complete, extensible, production-oriented web application that helps secondary school students in Zambia discover career paths, understand educational requirements, develop useful skills, and make informed decisions about their futures.
+
+Do not create a landing-page-only demonstration, static prototype, disconnected collection of screens, or dashboard filled with fake statistics.
+
+Build a cohesive application in which the main pages, navigation, search, forms, career catalogue, recommendation engine, saved careers, student dashboard, and learning resources work together.
+
+The application must have a clean codebase that can be exported from Google AI Studio, uploaded to GitHub, installed on another computer, run locally, and deployed independently of Google AI Studio.
+
+Implement the actual application files. Do not stop after providing a project plan, architecture description, wireframe, or sample code.
+
+If a feature requires an external API, database, authentication provider, or secret key that is not configured, implement the appropriate integration boundary, explain what remains to be configured, and provide a working fallback wherever reasonable. Never pretend that an unconfigured service is operational.
+
+---
+
+# 2. PRODUCT IDENTITY
+
+Application name: CARRA
+
+Product category: AI-assisted career guidance and student development platform.
+
+Primary market: Zambia.
+
+Primary users: Junior and senior secondary school students.
+
+Secondary users: School guidance counselors and teachers who support students in exploring career options.
+
+Core mission:
+
+Help students discover what they could become, understand the paths that lead there, and take practical steps toward their goals.
+
+CARRA should help answer five fundamental questions:
+
+1. What careers could match my interests and strengths?
+2. What school subjects and qualifications are relevant to those careers?
+3. What skills should I develop?
+4. Where can I find reliable learning resources?
+5. What can I do next to move toward my goals?
+
+The platform must not assume that every student already knows what career they want.
+
+It must support students who are undecided, students interested in several unrelated fields, students whose grades are improving, and students who want to explore career paths outside their current expectations.
+
+CARRA is an educational guidance tool. It is not an employment guarantee, a university admissions authority, a psychological diagnostic system, or a replacement for qualified teachers and counselors.
+
+---
+
+# 3. PRODUCT PRINCIPLES
+
+Follow these principles throughout the implementation.
+
+## 3.1 Student-first design
+
+Make the platform easy to understand for a secondary school student using a phone for the first time.
+
+Avoid unnecessary professional jargon.
+
+Explain unfamiliar concepts in plain English.
+
+Use practical examples relevant to Zambia.
+
+## 3.2 Low-data accessibility
+
+The application must load quickly on slow internet connections.
+
+Avoid large background videos, unnecessary animations, oversized images, and heavy UI dependencies.
+
+Use SVG icons, optimized assets, and lightweight CSS wherever possible.
+
+Load secondary content only when necessary.
+
+Make the main career catalogue usable without repeatedly requesting AI-generated responses.
+
+## 3.3 Honest career guidance
+
+Do not promise that a student will succeed in a career.
+
+Do not present a recommendation score as a scientifically validated probability.
+
+Clearly distinguish between verified information, general guidance, illustrative examples, and unverified information awaiting confirmation.
+
+Never fabricate official qualifications, admission requirements, scholarships, current vacancies, salaries, or course availability.
+
+## 3.4 Inclusive recommendations
+
+Never rank or restrict careers based on gender, disability, religion, ethnicity, family income, province, or other protected or irrelevant personal characteristics.
+
+A student's financial circumstances may inform optional affordability guidance, but must never determine whether the student is considered suitable for a career.
+
+Do not use stereotypes such as assuming that boys should pursue engineering or girls should pursue nursing.
+
+Present multiple possibilities and encourage students to explore alternatives.
+
+## 3.5 Progressive development
+
+Build a functional first version using stable, understandable technology.
+
+Keep the architecture modular so that secure authentication, a hosted database, an AI provider, counselor tools, and verified opportunity feeds can be introduced without rewriting the entire application.
+
+---
+
+# 4. REQUIRED TECHNOLOGY STACK
+
+Use the following stack unless a dependency is genuinely incompatible with the available environment.
+
+Frontend:
+- React.
+- TypeScript with strict type checking.
+- Vite.
+- Semantic HTML.
+- CSS modules or a clearly organized global CSS system.
+- React Router for page navigation, if appropriate.
+- Lucide React or another lightweight icon library.
+
+Data and application logic:
+- Typed TypeScript interfaces.
+- Modular service functions.
+- A transparent local career recommendation engine.
+- A separate service layer for future AI integration.
+- Local sample career data stored in dedicated files.
+
+Testing:
+- Vitest for unit tests.
+- React Testing Library for essential component tests where practical.
+- TypeScript checks.
+- Production build verification.
+
+Package management:
+- npm.
+- A consistent package.json and lockfile.
+
+Do not introduce Next.js, a separate Python backend, a complex microservice architecture, or a large UI framework unless a real requirement justifies it.
+
+The initial application should be easy for a beginner to understand and maintain.
+
+If a real backend is necessary for a feature, document the architecture and provide a suitable implementation rather than hiding backend requirements inside frontend code.
+
+---
+
+# 5. APPLICATION DESIGN SYSTEM
+
+Create a polished, modern education technology interface.
+
+The product should feel credible, organized, youthful, and professional without looking childish or excessively corporate.
+
+## 5.1 Brand palette
+
+Use this initial palette:
+
+- Primary navy: #153E75
+- Secondary blue: #2563EB
+- Light blue: #DBEAFE
+- Page background: #F8FAFC
+- Card background: #FFFFFF
+- Main text: #172033
+- Secondary text: #64748B
+- Borders: #E2E8F0
+- Success: #15803D
+- Warning: #B45309
+- Error: #B91C1C
+
+Use semantic CSS variables so that colors can be changed centrally.
+
+Do not hard-code the same colors independently in dozens of components.
+
+Maintain sufficient contrast between text and backgrounds.
+
+## 5.2 Typography
+
+Use a readable sans-serif font stack.
+
+Suggested system stack:
+
+Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif.
+
+Use consistent heading sizes, line heights, weights, and spacing.
+
+Body text should be comfortable to read on small screens.
+
+Avoid tiny labels, excessively thin typography, and oversized headings that push important content below the fold.
+
+## 5.3 Component styling
+
+Create reusable components for:
+
+- Buttons.
+- Text inputs.
+- Select fields.
+- Search bars.
+- Navigation links.
+- Career cards.
+- Resource cards.
+- Progress indicators.
+- Status labels.
+- Modal dialogs.
+- Confirmation dialogs.
+- Empty states.
+- Loading states.
+- Error messages.
+- Toast notifications.
+- Pagination controls.
+- Form validation messages.
+- Page headings.
+- Breadcrumbs where useful.
+
+Components must have consistent styling and behavior.
+
+Use visible keyboard focus indicators.
+
+Avoid excessive glassmorphism, neon colors, unnecessary gradients, random animations, and decorative elements that reduce usability.
+
+## 5.4 Icons and imagery
+
+Use consistent icons that clearly represent their functions.
+
+Prefer icons from one library instead of mixing unrelated icon styles.
+
+Use simple illustrations or restrained visual elements for careers when useful.
+
+Do not make the interface dependent on remote image URLs.
+
+If an image fails to load, show a suitable fallback.
+
+Never use images as a substitute for readable text.
+
+## 5.5 Responsive behavior
+
+Support these general viewport ranges:
+
+- Small phones: 320–480 pixels.
+- Large phones: 481–767 pixels.
+- Tablets: 768–1023 pixels.
+- Desktop: 1024 pixels and above.
+
+These are design targets, not strict device restrictions.
+
+On phones:
+- Use a compact header.
+- Collapse navigation into a functional mobile menu.
+- Use one-column card layouts where appropriate.
+- Ensure forms fit the screen.
+- Avoid horizontal scrolling.
+- Keep buttons and touch targets comfortably usable.
+- Use a fixed mobile navigation bar only if it does not obstruct content.
+
+On tablets:
+- Use balanced two-column layouts when appropriate.
+
+On desktops:
+- Use a sidebar for authenticated dashboards if it improves navigation.
+- Keep content widths readable.
+- Use available space without stretching text across the entire screen.
+
+Test layouts at narrow and wide widths.
+
+---
+
+# 6. SITE ARCHITECTURE AND NAVIGATION
+
+Create a coherent information architecture.
+
+## Public pages
+
+1. Landing page.
+2. About CARRA.
+3. Career discovery.
+4. Career detail pages.
+5. Learning hub.
+6. Resource detail pages where useful.
+7. Privacy information.
+8. Terms of use.
+9. Sign-in and registration screens when authentication is configured.
+
+## Student pages
+
+1. Student dashboard.
+2. Onboarding and profile setup.
+3. Career assessment.
+4. Personalized recommendations.
+5. Full career catalogue.
+6. Individual career details.
+7. Saved careers.
+8. Learning resources.
+9. Learning progress.
+10. Student profile and settings.
+
+## Future counselor pages
+
+Prepare a modular architecture for counselor-supported guidance, but do not create a misleading, fully functional counselor administration system unless its access control and data handling are implemented.
+
+## Navigation rules
+
+- Every visible navigation item must lead somewhere meaningful.
+- Use actual routes rather than placeholder links.
+- Unknown routes must display a useful not-found page.
+- Browser back and forward navigation must work.
+- Directly opening a valid route must render the correct page.
+- Page titles and document metadata should be meaningful.
+- Avoid unnecessary page reloads during ordinary navigation.
+
+Suggested navigation labels:
+
+Explore Careers, Career Assessment, Learning Hub, Saved Careers, My Dashboard, Profile.
+
+Show the relevant items according to the user's current access and application state.
+
+---
+
+# 7. LANDING PAGE
+
+Build a complete, polished landing page.
+
+## 7.1 Header
+
+Include:
+
+- CARRA logo or wordmark.
+- Short product description where space permits.
+- Explore Careers.
+- Learning Hub.
+- About.
+- Sign In when authentication is configured.
+- Get Started.
+
+On mobile, use a functional menu button with appropriate accessible labels.
+
+## 7.2 Hero section
+
+Main heading:
+
+"Discover Your Future with CARRA"
+
+Supporting text:
+
+"Explore careers, understand your options, and build the skills to take your next step. Career guidance designed for students in Zambia."
+
+Primary button: "Explore Careers"
+
+Secondary button: "Find Careers for Me"
+
+The primary action must navigate to the career catalogue.
+
+The secondary action must open the career assessment or onboarding flow.
+
+Include a tasteful visual representation of career exploration, such as connected career categories, a student dashboard preview, or simple illustrations.
+
+Do not generate fake student testimonials, unsupported impact figures, or claims that thousands of students already use the platform.
+
+## 7.3 How it works
+
+Display three understandable steps:
+
+1. Discover yourself.
+2. Explore careers.
+3. Plan your next step.
+
+Each step should have a brief description and a matching icon.
+
+## 7.4 Feature overview
+
+Introduce:
+
+- Career discovery.
+- Personalized recommendations.
+- Subject and qualification guidance.
+- Learning resources.
+- Skills development.
+- Saved careers and personal progress.
+
+Each feature should link to the appropriate page.
+
+## 7.5 Career categories
+
+Provide category cards for:
+
+- Technology.
+- Engineering.
+- Health and Medicine.
+- Business and Finance.
+- Science and Research.
+- Agriculture.
+- Education.
+- Law and Public Service.
+- Creative Industries.
+- Environment and Sustainability.
+- Skilled Trades.
+- Social Sciences.
+
+Each category should lead to a filtered career catalogue.
+
+## 7.6 Call to action
+
+Use a clear final section encouraging students to explore their options.
+
+## 7.7 Footer
+
+Include:
+
+- CARRA description.
+- Main navigation.
+- Privacy information.
+- Terms of use.
+- Contact placeholder only if clearly identified as unconfigured.
+- Copyright notice.
+
+Do not invent an official company address, phone number, or email address.
+
+---
+
+# 8. STUDENT ONBOARDING
+
+Create a guided onboarding experience.
+
+It should be short enough to complete comfortably but detailed enough to improve career recommendations.
+
+Use a multi-step form with visible progress.
+
+Allow users to move backward without losing entered information.
+
+Validate inputs and explain errors clearly.
+
+## Step 1: School information
+
+Collect:
+
+- Current school level.
+- Current grade or year.
+- Province or region, optionally.
+- Subjects currently studied.
+- Subjects the student enjoys.
+
+Use school-level options appropriate to the Zambian context.
+
+Do not claim that every school follows an identical subject combination.
+
+Avoid making a province mandatory.
+
+## Step 2: Interests
+
+Allow multiple selections.
+
+Examples:
+
+- Solving problems.
+- Working with computers.
+- Understanding science.
+- Helping people.
+- Building and repairing things.
+- Managing money.
+- Designing and creating.
+- Working with animals.
+- Exploring nature.
+- Teaching others.
+- Starting a business.
+- Understanding society.
+- Working with data.
+- Conducting research.
+- Leading projects.
+
+Allow an "Other" option with sensible input limits.
+
+## Step 3: Skills and strengths
+
+Allow students to select strengths such as:
+
+- Communication.
+- Logical reasoning.
+- Creativity.
+- Organization.
+- Collaboration.
+- Problem-solving.
+- Observation.
+- Practical work.
+- Writing.
+- Numeracy.
+- Leadership.
+- Research.
+
+Explain that students do not need to be excellent at every selected skill.
+
+Do not equate a student's current skill level with their permanent ability.
+
+## Step 4: Aspirations
+
+Ask what kinds of work the student would like to explore.
+
+Offer multiple selections.
+
+Include an "I'm not sure yet" option.
+
+Allow the student to indicate that they want suggestions outside their current interests.
+
+## Step 5: Review
+
+Show a readable summary of their responses.
+
+Allow editing before completion.
+
+Explain that the information will be used to suggest careers and that the recommendations are exploratory.
+
+## Completion
+
+Save the profile using the available persistence layer.
+
+Generate recommendations immediately using the working rule-based engine.
+
+If an optional AI service is unavailable, the student must still receive meaningful results.
+
+Do not require an AI API key to complete basic onboarding.
+
+---
+
+# 9. CAREER CATALOGUE
+
+Create a structured career catalogue containing at least 30 meaningful career profiles in the initial version.
+
+Include, at minimum:
+
+1. Software Engineer.
+2. Civil Engineer.
+3. Mechanical Engineer.
+4. Electrical Engineer.
+5. Doctor.
+6. Nurse.
+7. Pharmacist.
+8. Biomedical Scientist.
+9. Teacher.
+10. Accountant.
+11. Economist.
+12. Agricultural Scientist.
+13. Veterinarian.
+14. Biologist.
+15. Physicist.
+16. Chemist.
+17. Architect.
+18. Electrician.
+19. Cybersecurity Analyst.
+20. Data Analyst.
+21. Environmental Scientist.
+22. Lawyer.
+23. Entrepreneur.
+24. Geologist.
+25. Mining Engineer.
+26. Quantity Surveyor.
+27. Renewable Energy Technician.
+28. Graphic Designer.
+29. Journalist.
+30. Civil Aviation Professional.
+
+Where appropriate, include careers that can be entered through university, technical colleges, apprenticeships, vocational training, professional qualifications, or alternative education pathways.
+
+Do not imply that every career requires a university degree.
+
+## 9.1 Career data model
+
+Each career must use a consistent typed structure.
+
+Include fields equivalent to:
+
+- id.
+- slug.
+- title.
+- shortDescription.
+- fullDescription.
+- category.
+- relatedCategories.
+- typicalResponsibilities.
+- relevantSubjects.
+- usefulSkills.
+- educationPathways.
+- qualificationNotes.
+- careerProgression.
+- relatedCareers.
+- learningResources.
+- zambiaContext.
+- dataSourceStatus.
+- lastVerified, when genuinely available.
+
+Add optional fields only when they provide real value.
+
+## 9.2 Career descriptions
+
+Each profile must contain meaningful information rather than repeated generic paragraphs.
+
+Explain:
+
+- What the professional does.
+- What a typical working day might involve.
+- What kinds of problems the profession solves.
+- Which school subjects may be relevant.
+- Which skills students can begin developing now.
+- Which education or training pathways may be available.
+- Which related careers students might also explore.
+
+Label illustrative workday examples as examples rather than universal facts.
+
+## 9.3 Zambia-specific qualification information
+
+Distinguish general educational guidance from official requirements.
+
+Where official requirements have not been verified, say so.
+
+Do not invent specific grade thresholds, subject combinations, professional registration requirements, tuition amounts, salary ranges, or university admission rules.
+
+Structure the data so verified information can later be associated with its source and verification date.
+
+Do not pretend that sample career data is a live connection to Zambian universities or employers.
+
+---
+
+# 10. CAREER SEARCH, FILTERING AND DISCOVERY
+
+The career catalogue must be fully functional.
+
+Implement:
+
+- Search by career title.
+- Search by keywords in descriptions.
+- Filter by category.
+- Filter by relevant subjects.
+- Filter by skills or interests where appropriate.
+- Sort alphabetically.
+- Sort by recommendation relevance when a student has completed an assessment.
+- Clear all filters.
+- Display the number of matching results.
+- Display a useful empty state.
+- Preserve filters during ordinary navigation where practical.
+
+Search should ignore capitalization and handle leading or trailing spaces.
+
+Do not search only career titles when descriptions and tags are available.
+
+Use debouncing only if it materially improves performance.
+
+The catalogue must work locally without an AI service.
+
+## Career cards
+
+Each card should show:
+
+- Career title.
+- Category.
+- Short description.
+- A few relevant subjects or skills.
+- Save button.
+- View details action.
+
+The entire card should not accidentally trigger a conflicting action when a student clicks the save button.
+
+Use accessible labels for icon-only controls.
+
+---
+
+# 11. CAREER DETAIL PAGES
+
+Every career must have a dedicated detail page.
+
+Include:
+
+1. Career overview.
+2. Typical responsibilities.
+3. Relevant school subjects.
+4. Useful skills.
+5. Possible education pathways.
+6. Qualification notes.
+7. Practical ways to start learning.
+8. Related careers.
+9. Related learning resources.
+10. Source and verification information when available.
+
+Include a Save Career button.
+
+Include an Explore Similar Careers action.
+
+Include an option to return to search results without unnecessarily losing the student's filters.
+
+Where information is uncertain, communicate uncertainty directly.
+
+Do not display unsupported salary figures or employment demand charts.
+
+If future market statistics are added, they must come from an identifiable, dated source and clearly explain what the figures represent.
+
+---
+
+# 12. CAREER RECOMMENDATION ENGINE
+
+Implement a real, deterministic recommendation engine before adding external AI.
+
+The recommendation engine must run locally and produce meaningful results using the student's selected interests, subjects, skills, and aspirations.
+
+Do not simply assign random scores.
+
+Do not recommend the same small group of popular careers to everyone.
+
+## 12.1 Recommendation inputs
+
+Use:
+
+- Selected interests.
+- Subjects enjoyed.
+- Subjects studied.
+- Skills and strengths.
+- Preferred work activities.
+- Explicit career interests, if provided.
+
+Use current grades only if students voluntarily provide them and the implementation has a clear reason to use them.
+
+Grades must not define a student's potential.
+
+Never use sensitive or irrelevant demographic attributes to rank careers.
+
+## 12.2 Career metadata
+
+Give each career structured tags for relevant interests, skills, subjects, and activities.
+
+Use these tags to calculate transparent relevance scores.
+
+## 12.3 Scoring approach
+
+Create a configurable weighted scoring system.
+
+For the initial version, use a scoring model similar to:
+
+- Interest alignment: 40%.
+- Subject alignment: 30%.
+- Skill alignment: 20%.
+- Preferred activity alignment: 10%.
+
+These weights are initial product choices, not scientifically validated measures.
+
+Normalize the score against the applicable maximum possible score.
+
+Avoid dividing by zero.
+
+If the student has not provided enough information, ask them to complete more of the assessment or present broad exploratory categories instead of inventing a precise match.
+
+## 12.4 Recommendation explanations
+
+For each recommendation, show:
+
+- Career title.
+- Relevance score or clearly labeled match indicator.
+- Reasons it was recommended.
+- Matching interests.
+- Matching subjects.
+- Relevant skills.
+- Suggested next steps.
+- A link to the career detail page.
+
+For example:
+
+"This career appeared in your recommendations because you selected problem-solving, enjoy mathematics, and want to understand how technology works."
+
+Generate explanations from actual matched attributes.
+
+Do not create explanations that claim a subject or skill matched when it did not.
+
+## 12.5 Diversity of results
+
+Show several careers rather than a single answer.
+
+Include careers from different categories where there is reasonable evidence of relevance.
+
+Allow students to explore unexpected alternatives.
+
+Do not force a recommendation into a career category without meaningful supporting information.
+
+## 12.6 Transparency
+
+Add a short explanation that the results are suggestions based on the student's answers.
+
+Provide a way to change answers and generate updated results.
+
+Do not describe the score as the probability of success.
+
+Do not make claims that the algorithm has been clinically, scientifically, or professionally validated.
+
+## 12.7 AI integration boundary
+
+Create a separate service interface for future AI-assisted career explanations.
+
+Keep provider-specific code outside the main recommendation engine.
+
+If an API key is missing, use the local recommendation engine.
+
+Never expose a private API key in frontend JavaScript, bundled assets, public source code, or browser-visible environment variables.
+
+If Google AI Studio supports the requested implementation, use its available capabilities appropriately, but keep the exported project independent of its internal execution environment.
+
+---
+
+# 13. STUDENT DASHBOARD
+
+Build a useful student dashboard rather than a page filled with decorative charts.
+
+Include:
+
+## Welcome area
+
+- Personalized greeting when a profile name is available.
+- A brief explanation of what the student can do next.
+- A clear Continue Exploring action.
+
+## Recommendation summary
+
+Display a small selection of recommended careers.
+
+Each item must link to its actual career page.
+
+## Saved careers
+
+Show saved careers with a remove or unsave action.
+
+If no careers have been saved, explain how to start saving them.
+
+## Learning progress
+
+Track only meaningful activities supported by the application, such as completed learning steps or resources marked complete.
+
+Do not invent progress values.
+
+## Profile completeness
+
+Show a simple indication of which optional profile sections have been completed.
+
+Do not make students feel that an incomplete profile means they cannot succeed.
+
+## Quick actions
+
+Provide functional shortcuts to:
+
+- Career assessment.
+- Career catalogue.
+- Saved careers.
+- Learning hub.
+- Profile settings.
+
+## First-use state
+
+If no profile exists, show a clear onboarding action.
+
+If no recommendations exist, explain how to generate them.
+
+If there is no saved data, show helpful empty states rather than errors.
+
+---
+
+# 14. SAVED CAREERS
+
+Implement a working saved-careers system.
+
+Students should be able to:
+
+- Save a career from a career card.
+- Save a career from its detail page.
+- Remove a saved career.
+- View all saved careers.
+- Open saved career details.
+- See whether a career is already saved.
+
+Prevent duplicate saved entries.
+
+Use a single source of truth for saved-career state so that the dashboard, catalogue, and detail pages remain synchronized.
+
+For an unauthenticated prototype, use a clearly documented local persistence mechanism.
+
+When authentication and a secure database are introduced, store the records under the authenticated student's account and enforce ownership on the server.
+
+Do not claim that local browser storage synchronizes between devices.
+
+---
+
+# 15. LEARNING HUB
+
+Build a dedicated learning hub that supports students in developing relevant knowledge and skills.
+
+## Categories
+
+Include:
+
+- Academic subjects.
+- Programming and technology.
+- Communication.
+- Problem-solving.
+- Financial literacy.
+- Research skills.
+- Entrepreneurship.
+- Agriculture.
+- Career preparation.
+- Creative skills.
+- Environmental awareness.
+
+## Resource data model
+
+Each resource should support:
+
+- id.
+- title.
+- description.
+- category.
+- resourceType.
+- targetSkill.
+- suitableCareerIds.
+- externalUrl, when available.
+- provider, when known.
+- difficultyLevel.
+- estimatedDuration, when known.
+- verificationStatus.
+
+## Resource types
+
+Support:
+
+- Articles.
+- Tutorials.
+- Videos.
+- Interactive learning tools.
+- Books and reading material.
+- Official education information.
+- Practice projects.
+
+Only display resource types that the actual resource supports.
+
+## Resource behavior
+
+Students must be able to:
+
+- Browse resources.
+- Search resources.
+- Filter by category.
+- Open external resources safely.
+- Save or bookmark resources where implemented.
+- Mark appropriate learning activities complete.
+
+Do not fabricate external URLs.
+
+Do not claim that a resource has been verified if it has not been checked.
+
+Clearly distinguish external learning resources from content hosted directly by CARRA.
+
+Do not download or reproduce copyrighted material without permission.
+
+---
+
+# 16. STUDENT PROFILE AND SETTINGS
+
+Create a profile page where students can review and edit the information used for career guidance.
+
+Include:
+
+- Display name, if collected.
+- School level.
+- Current grade or year.
+- Subjects.
+- Interests.
+- Skills.
+- Aspirations.
+- Recommendation preferences.
+
+Allow the student to update their answers and regenerate recommendations.
+
+Provide a way to clear locally stored prototype data.
+
+Explain the consequences before clearing saved information.
+
+Do not collect a student's full home address, national identification number, precise location, family income, or other unnecessary sensitive details.
+
+Collect only the information needed to deliver the service.
+
+If accounts are added, provide appropriate sign-out and account-management flows.
+
+---
+
+# 17. AUTHENTICATION AND STUDENT PRIVACY
+
+Treat privacy as a core architectural requirement.
+
+Do not build a fake authentication interface that appears secure but accepts arbitrary credentials without real verification.
+
+If a proper authentication provider is configured, implement its supported authentication flows.
+
+If authentication is not configured, make the prototype's local-only status explicit and keep the application usable without pretending accounts exist.
+
+For any future production authentication system:
+
+- Store passwords only through a trusted authentication system or appropriate password-hashing mechanism.
+- Never store plaintext passwords.
+- Enforce authorization on the server.
+- Validate user input on both client and server.
+- Protect private API credentials.
+- Restrict access to student records by account ownership.
+- Avoid logging sensitive student data.
+- Use HTTPS in deployment.
+- Provide clear data-retention and deletion policies.
+- Minimize collection of children's personal information.
+
+Because the platform targets secondary school students, account creation and data collection must account for applicable child-protection and privacy requirements.
+
+Do not implement public student profiles, public student rankings, or public displays of private assessment responses.
+
+Do not send student profile data to an external AI service unless the integration is explicitly configured, disclosed, and appropriately protected.
+
+Provide privacy information that accurately describes the current implementation rather than promising protections that have not been built.
+
+---
+
+# 18. DATABASE AND PERSISTENCE ARCHITECTURE
+
+Separate data access from the UI.
+
+Create clear interfaces for:
+
+- Student profile.
+- Career.
+- Recommendation result.
+- Saved career.
+- Learning resource.
+- Learning progress.
+
+For the first working version, use local sample data and an appropriate local persistence mechanism.
+
+Keep sample data in dedicated files.
+
+Do not scatter large arrays of career records throughout components.
+
+Create service functions for reading and updating profiles, saved careers, and learning progress.
+
+Handle malformed or unavailable local data gracefully.
+
+Include sensible defaults and migration-friendly data structures.
+
+Prepare the application for a future hosted database such as Supabase or another suitable managed database.
+
+If a database provider is added:
+
+- Use environment variables for connection configuration.
+- Use public client credentials only where the provider explicitly designates them safe for clients.
+- Never expose service-role keys or administrative secrets.
+- Enforce server-side access controls and row-level security where supported.
+- Associate student data with the correct authenticated account.
+- Include appropriate database schema and migration documentation.
+
+Do not introduce a database dependency just to simulate functionality that can be implemented more simply in the initial version.
+
+---
+
+# 19. APPLICATION ARCHITECTURE AND FOLDER STRUCTURE
+
+Use a clear, beginner-friendly project structure similar to:
+
+carra/
+├── public/
+│   ├── favicon.svg
+│   └── assets/
+├── src/
+│   ├── app/
+│   │   ├── App.tsx
+│   │   ├── routes.tsx
+│   │   └── providers.tsx
+│   ├── components/
+│   │   ├── layout/
+│   │   ├── navigation/
+│   │   ├── careers/
+│   │   ├── resources/
+│   │   ├── forms/
+│   │   └── common/
+│   ├── pages/
+│   │   ├── HomePage.tsx
+│   │   ├── CareersPage.tsx
+│   │   ├── CareerDetailPage.tsx
+│   │   ├── AssessmentPage.tsx
+│   │   ├── RecommendationsPage.tsx
+│   │   ├── DashboardPage.tsx
+│   │   ├── SavedCareersPage.tsx
+│   │   ├── LearningHubPage.tsx
+│   │   ├── ProfilePage.tsx
+│   │   ├── AboutPage.tsx
+│   │   └── NotFoundPage.tsx
+│   ├── data/
+│   │   ├── careers.ts
+│   │   ├── resources.ts
+│   │   └── careerCategories.ts
+│   ├── features/
+│   │   ├── assessment/
+│   │   ├── recommendations/
+│   │   ├── saved-careers/
+│   │   └── learning-progress/
+│   ├── services/
+│   │   ├── careerService.ts
+│   │   ├── profileService.ts
+│   │   ├── recommendationService.ts
+│   │   ├── resourceService.ts
+│   │   └── storageService.ts
+│   ├── types/
+│   │   ├── career.ts
+│   │   ├── student.ts
+│   │   ├── recommendation.ts
+│   │   └── resource.ts
+│   ├── utils/
+│   │   ├── validation.ts
+│   │   └── scoring.ts
+│   ├── styles/
+│   │   ├── globals.css
+│   │   └── variables.css
+│   └── main.tsx
+├── tests/
+├── .env.example
+├── .gitignore
+├── index.html
+├── package.json
+├── package-lock.json
+├── tsconfig.json
+├── vite.config.ts
+├── README.md
+├── LICENSE
+└── CONTRIBUTING.md
+
+You may adjust this structure if necessary, but preserve clear separation of concerns.
+
+Do not create empty files merely to make the folder structure look complete.
+
+Do not create a complicated architecture with many unnecessary abstractions.
+
+Ensure every imported module actually exists.
+
+---
+
+# 20. ERROR HANDLING AND RESILIENCE
+
+Handle ordinary failures gracefully.
+
+Examples:
+
+- The career catalogue is empty.
+- A search returns no matches.
+- A saved career has been removed from the catalogue.
+- Local storage is unavailable.
+- Local data is malformed.
+- An external learning resource is unavailable.
+- A recommendation request fails.
+- An API key is missing.
+- A user opens an unknown route.
+- A form contains invalid information.
+
+Use helpful messages that explain what the user can do next.
+
+Do not display raw stack traces, API secrets, or internal implementation details to students.
+
+Do not silently discard user input after a validation failure.
+
+Prevent duplicate submissions where appropriate.
+
+Do not use alert boxes for every interaction when an inline message, toast, or confirmation dialog would be clearer.
+
+---
+
+# 21. ACCESSIBILITY
+
+Follow practical WCAG accessibility principles.
+
+Implement:
+
+- Semantic headings.
+- Proper form labels.
+- Keyboard-accessible navigation.
+- Visible focus indicators.
+- Accessible buttons.
+- Meaningful alternative text for informative images.
+- Sufficient color contrast.
+- Accessible error messages.
+- Appropriate ARIA attributes when needed.
+- Logical tab order.
+- Clear names for icon-only controls.
+- Support for reduced motion.
+- Responsive text sizing.
+
+Do not rely exclusively on color to communicate errors, success, relevance, or completion.
+
+Ensure dialogs can be opened and dismissed with keyboard interaction where appropriate.
+
+Avoid adding ARIA attributes when native HTML semantics already provide the required accessibility.
+
+---
+
+# 22. PERFORMANCE AND LOW-DATA OPTIMIZATION
+
+Optimize for ordinary school internet connections and modest devices.
+
+Requirements:
+
+- Avoid unnecessary dependencies.
+- Minimize initial JavaScript bundle size.
+- Avoid large background media.
+- Use efficient list rendering.
+- Keep career records lightweight.
+- Avoid repeated calculations when they materially affect performance.
+- Lazy-load secondary routes where useful.
+- Avoid making an API call for every career card.
+- Cache static data appropriately.
+- Keep the initial interface useful while optional integrations are unavailable.
+
+Do not add a service worker or claim offline functionality unless it is correctly implemented and tested.
+
+If offline support is implemented, document exactly which pages and data remain available offline and how updates are handled.
+
+---
+
+# 23. GITHUB AND PORTABILITY REQUIREMENTS
+
+This section is mandatory.
+
+The application must not depend on Google AI Studio to run after export.
+
+Generate an ordinary source-code project that can be used in GitHub and developed with Visual Studio Code.
+
+## 23.1 Required project files
+
+Include:
+
+- package.json.
+- package-lock.json, when dependency installation has been completed.
+- tsconfig.json.
+- vite.config.ts.
+- index.html.
+- Complete application source.
+- Static assets.
+- README.md.
+- .gitignore.
+- .env.example.
+- Test configuration.
+- Tests for important logic.
+
+Include additional files only when needed.
+
+## 23.2 Package scripts
+
+Provide working scripts equivalent to:
+
+- npm run dev.
+- npm run build.
+- npm run preview.
+- npm run test.
+- npm run typecheck.
+
+The exact scripts must match the dependencies and configuration actually generated.
+
+Do not list scripts that fail because the relevant tool or file is missing.
+
+## 23.3 Environment variables
+
+Include an .env.example file containing only placeholder variable names and descriptions.
+
+For example:
+
+VITE_PUBLIC_APP_NAME=CARRA
+
+Any private AI provider key or server-only credential must remain outside client-side code.
+
+Never place real credentials in the repository.
+
+## 23.4 Git hygiene
+
+The .gitignore must exclude:
+
+- node_modules/.
+- dist/.
+- .env.
+- .env.local.
+- Other local secret files.
+- Temporary build files.
+- Editor-specific files that do not belong in the project.
+
+Do not exclude the .env.example file.
+
+Do not commit generated caches or unnecessarily large artifacts.
+
+## 23.5 README requirements
+
+Write a detailed README that explains:
+
+1. What CARRA does.
+2. Who it serves.
+3. Main features.
+4. Technology stack.
+5. Project folder structure.
+6. Software prerequisites.
+7. How to download or clone the repository.
+8. How to install dependencies.
+9. How to run the development server.
+10. How to run tests.
+11. How to check TypeScript.
+12. How to build for production.
+13. How to configure optional environment variables.
+14. Which features currently use local sample data.
+15. Which external services remain unconfigured.
+16. How to deploy the frontend.
+17. How to add a backend and database later.
+
+Use commands that match the actual project.
+
+## 23.6 GitHub Pages compatibility
+
+Configure the frontend so it can be deployed to GitHub Pages if the project remains a static frontend.
+
+Consider Vite's base path and client-side routing behavior.
+
+Provide an appropriate GitHub Actions workflow only if it can be configured correctly for the generated project.
+
+Do not assume that a GitHub repository automatically creates a live website.
+
+Do not claim that GitHub Pages can run a private server-side AI integration or database backend.
+
+If the application later requires server-side processing, explain that a separate hosting environment is necessary for that component.
+
+## 23.7 Independent installation
+
+After export, the project must be able to run without access to the Google AI Studio workspace.
+
+Do not import undocumented AI Studio-specific modules.
+
+Do not reference temporary sandbox files or workspace-only URLs.
+
+Do not leave essential source files inaccessible inside the generation environment.
+
+---
+
+# 24. TESTING REQUIREMENTS
+
+Write and run tests wherever the environment permits.
+
+At minimum, test the following logic:
+
+## Career catalogue
+
+- All career IDs are unique.
+- Required fields are present.
+- Career slugs are unique.
+- Category filtering returns appropriate results.
+- Search ignores capitalization.
+- Search handles empty input.
+
+## Recommendation engine
+
+- Matching interests influence recommendations.
+- Matching subjects influence recommendations.
+- Matching skills influence recommendations.
+- Empty profiles do not produce division-by-zero errors.
+- Identical inputs produce consistent results.
+- Explanations correspond to actual matching attributes.
+- Scores remain within the intended range.
+- Sensitive demographic attributes do not affect rankings.
+
+## Saved careers
+
+- A career can be saved.
+- Duplicate saves are prevented.
+- A career can be removed.
+- Invalid stored data is handled safely.
+
+## Onboarding
+
+- Required fields are validated.
+- Invalid entries display useful messages.
+- Moving backward preserves entered answers.
+- Completing onboarding produces a profile that the recommendation engine can use.
+
+## Navigation
+
+- Main navigation links work.
+- Career detail routes resolve.
+- Unknown routes display a not-found page.
+
+## Build checks
+
+Run the available commands to verify:
+
+- Dependency installation.
+- TypeScript type checking.
+- Automated tests.
+- Production build.
+
+Fix discovered errors before declaring the application complete.
+
+If the environment does not permit executing a command, clearly state that the command remains unverified.
+
+Never report a successful build based only on inspecting the source code.
+
+---
+
+# 25. CONTENT QUALITY AND SOURCE MANAGEMENT
+
+Career guidance must be informative and honest.
+
+Keep career descriptions specific to each profession.
+
+Do not duplicate one generic description across multiple careers.
+
+For facts that may change, such as university requirements, registration rules, course availability, scholarships, and professional accreditation, include source metadata when verified information is available.
+
+Source records should support fields equivalent to:
+
+- Source title.
+- Source organization.
+- Source URL.
+- Date accessed or verified.
+- Claim supported.
+
+Do not fabricate source citations.
+
+Do not label information as officially verified without a genuine source.
+
+When current information is unavailable, provide general guidance and explain where students should verify the details.
+
+Keep sample content separate from verified factual content.
+
+---
+
+# 26. FUNCTIONAL ACCEPTANCE CRITERIA
+
+The first version is acceptable only when the following essential flows work together.
+
+### Flow A: Discover a career
+
+1. Student opens the landing page.
+2. Student clicks Explore Careers.
+3. Student searches for a career.
+4. Student filters the catalogue.
+5. Student opens a career profile.
+6. Student reads relevant subjects and education pathways.
+7. Student saves the career.
+8. The saved career appears in the saved-careers section.
+
+### Flow B: Receive recommendations
+
+1. Student opens the assessment.
+2. Student selects interests.
+3. Student selects subjects.
+4. Student selects skills.
+5. Student reviews their answers.
+6. Student completes the assessment.
+7. The recommendation engine calculates results.
+8. Results explain why each career was recommended.
+9. Student opens a recommendation.
+10. Student changes their profile and can regenerate results.
+
+### Flow C: Use the learning hub
+
+1. Student opens the learning hub.
+2. Student searches for a resource.
+3. Student filters by category.
+4. Student opens an available resource.
+5. Student can save or track the resource if that functionality is implemented.
+
+### Flow D: Return to the application
+
+1. Student saves careers.
+2. Student navigates to another page.
+3. Saved-career state remains synchronized.
+4. Refresh behavior matches the documented persistence mechanism.
+5. If data is missing or corrupted, the application recovers gracefully.
+
+### Flow E: Export and deploy
+
+1. The source code is exported.
+2. The source code is placed in a GitHub repository.
+3. Dependencies can be installed independently.
+4. The development server can start.
+5. Tests and type checking can run.
+6. A production build can be generated.
+7. The static frontend can be deployed using its documented hosting configuration.
+
+Do not mark any flow complete unless the relevant behavior has been implemented and tested to the extent possible.
+
+---
+
+# 27. IMPLEMENTATION PRIORITIES
+
+Implement the application in the following order.
+
+Phase 1: Foundation
+- Set up the project.
+- Create the design system.
+- Create routes and shared layouts.
+- Build the landing page.
+
+Phase 2: Career discovery
+- Create the typed career data model.
+- Add at least 30 useful career profiles.
+- Build search, filters, cards, and detail pages.
+
+Phase 3: Recommendations
+- Build the onboarding flow.
+- Implement transparent scoring logic.
+- Display explanations and suggested next steps.
+
+Phase 4: Student experience
+- Build the dashboard.
+- Add saved careers.
+- Add profile editing.
+- Add the learning hub.
+
+Phase 5: Reliability
+- Handle loading, empty, and error states.
+- Add responsive behavior.
+- Improve accessibility.
+- Add automated tests.
+
+Phase 6: GitHub readiness
+- Verify all project files.
+- Write the README.
+- Create the .gitignore and .env.example.
+- Configure build scripts.
+- Verify production build and portability.
+- Prepare GitHub Pages deployment if compatible.
+
+If implementation must be split into several stages, preserve existing work and continue from the actual project state. Do not regenerate unrelated files unnecessarily.
+
+---
+
+# 28. FINAL EXECUTION INSTRUCTIONS
+
+Begin implementing CARRA now.
+
+First inspect the available project environment and determine the appropriate entry point.
+
+Then create or update the actual source files.
+
+Prioritize a cohesive, working application over an enormous collection of incomplete features.
+
+Use the required stack and folder structure where compatible.
+
+Keep all important functionality connected.
+
+Do not return only a description of the proposed solution.
+
+Do not create buttons that have no actions.
+
+Do not fabricate external integrations.
+
+Do not invent official career requirements or statistics.
+
+Do not expose secrets.
+
+Do not leave unresolved imports, invalid routes, or unnecessary dependencies.
+
+Do not claim tests passed unless they were executed.
+
+Do not omit GitHub compatibility.
+
+When the implementation is complete, provide a concise report stating:
+
+1. What was built.
+2. Which features are working.
+3. Which features use sample data.
+4. Which external services need configuration.
+5. Which tests were actually run and their results.
+6. Whether the production build succeeded.
+7. How to export the project.
+8. How to upload it to GitHub.
+9. How to run it locally.
+10. What remains before a real public launch.
+
+The ultimate goal is to create a maintainable, expandable, student-centered career guidance platform for Zambia that can grow into a real service without depending on Google AI Studio to operate.
